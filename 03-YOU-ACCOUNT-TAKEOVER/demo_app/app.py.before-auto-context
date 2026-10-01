@@ -1,0 +1,753 @@
+from flask import Flask, render_template, jsonify, request
+import requests
+from datetime import datetime
+
+
+app = Flask(__name__)
+
+
+# ============================================================
+# CYBERGUARD ATO DASHBOARD
+# ============================================================
+
+ATO_API = "http://127.0.0.1:8000"
+
+
+# ============================================================
+# IN-MEMORY THREAT EVENT HISTORY
+# ============================================================
+
+# This is intentionally local/demo-only and resets when Flask
+# restarts.
+THREAT_EVENTS = []
+
+MAX_EVENTS = 50
+
+
+# ============================================================
+# DASHBOARD
+# ============================================================
+
+@app.route("/")
+def dashboard():
+    return render_template("index.html")
+
+
+# ============================================================
+# USER LOGIN PAGE
+# ============================================================
+
+@app.route("/login")
+def login_page():
+    return render_template("login.html")
+
+
+# ============================================================
+# USER LOGIN API PROXY
+# ============================================================
+
+@app.route(
+    "/api/login",
+    methods=["POST"]
+)
+def user_login():
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        ) or {}
+
+        # Send the user's login request to the real
+        # FastAPI ATO detection engine.
+        response = requests.post(
+            f"{ATO_API}/login",
+            json=data,
+            timeout=5
+        )
+
+        return jsonify(
+            response.json()
+        ), response.status_code
+
+    except requests.exceptions.ConnectionError:
+
+        return jsonify({
+            "error":
+                "ATO API is offline. Start the FastAPI server on port 8000."
+        }), 503
+
+    except requests.exceptions.Timeout:
+
+        return jsonify({
+            "error":
+                "ATO API request timed out."
+        }), 504
+
+    except Exception as e:
+
+        return jsonify({
+            "error":
+                str(e)
+        }), 500
+
+
+# ============================================================
+# MFA VERIFICATION API PROXY
+# ============================================================
+
+@app.route(
+    "/api/mfa/verify",
+    methods=["POST"]
+)
+def user_mfa_verify():
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        ) or {}
+
+        # Send the MFA verification request to the real
+        # FastAPI ATO detection engine.
+        response = requests.post(
+            f"{ATO_API}/mfa/verify",
+            json=data,
+            timeout=5
+        )
+
+        return jsonify(
+            response.json()
+        ), response.status_code
+
+    except requests.exceptions.ConnectionError:
+
+        return jsonify({
+            "error":
+                "ATO API is offline. Start the FastAPI server on port 8000."
+        }), 503
+
+    except requests.exceptions.Timeout:
+
+        return jsonify({
+            "error":
+                "MFA verification request timed out."
+        }), 504
+
+    except Exception as e:
+
+        return jsonify({
+            "error":
+                str(e)
+        }), 500
+
+
+# ============================================================
+# SESSION CHECK API PROXY
+# ============================================================
+
+@app.route(
+    "/api/session/check",
+    methods=["POST"]
+)
+def user_session_check():
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        ) or {}
+
+        # Send the session check request to the real
+        # FastAPI ATO session monitoring engine.
+        response = requests.post(
+            f"{ATO_API}/session/check",
+            json=data,
+            timeout=5
+        )
+
+        return jsonify(
+            response.json()
+        ), response.status_code
+
+    except requests.exceptions.ConnectionError:
+
+        return jsonify({
+            "error":
+                "ATO API is offline. Start the FastAPI server on port 8000."
+        }), 503
+
+    except requests.exceptions.Timeout:
+
+        return jsonify({
+            "error":
+                "Session check request timed out."
+        }), 504
+
+    except Exception as e:
+
+        return jsonify({
+            "error":
+                str(e)
+        }), 500
+
+
+
+# ============================================================
+# SYSTEM HEALTH
+# ============================================================
+
+@app.route("/api/health")
+def health():
+
+    try:
+
+        response = requests.get(
+            f"{ATO_API}/health",
+            timeout=5
+        )
+
+        return jsonify(
+            response.json()
+        )
+
+    except Exception as e:
+
+        return jsonify({
+            "status": "offline",
+            "error": str(e)
+        }), 503
+
+
+# ============================================================
+# BLOCKED IPs
+# ============================================================
+
+@app.route("/api/blocked-ips")
+def blocked_ips():
+
+    try:
+
+        response = requests.get(
+            f"{ATO_API}/blocked-ips",
+            timeout=5
+        )
+
+        return jsonify(
+            response.json()
+        )
+
+    except Exception as e:
+
+        return jsonify({
+            "count": 0,
+            "blocked_ips": [],
+            "error": str(e)
+        })
+
+
+# ============================================================
+# ACTIVE SESSIONS
+# ============================================================
+
+@app.route("/api/sessions")
+def sessions():
+
+    try:
+
+        response = requests.get(
+            f"{ATO_API}/sessions",
+            timeout=5
+        )
+
+        return jsonify(
+            response.json()
+        )
+
+    except Exception as e:
+
+        return jsonify({
+            "sessions": [],
+            "error": str(e)
+        })
+
+
+# ============================================================
+# SESSION STATISTICS
+# ============================================================
+
+@app.route("/api/session-statistics")
+def session_statistics():
+
+    try:
+
+        response = requests.get(
+            f"{ATO_API}/session/statistics",
+            timeout=5
+        )
+
+        return jsonify(
+            response.json()
+        )
+
+    except Exception as e:
+
+        return jsonify({
+
+            "total_sessions": 0,
+
+            "active_sessions": 0,
+
+            "revoked_sessions": 0,
+
+            "expired_sessions": 0,
+
+            "suspicious_sessions": 0,
+
+            "error": str(e)
+
+        })
+
+
+# ============================================================
+# THREAT EVENT LOG
+# ============================================================
+
+@app.route("/api/threat-events")
+def threat_events():
+
+    return jsonify({
+        "count": len(THREAT_EVENTS),
+        "events": THREAT_EVENTS
+    })
+
+
+# ============================================================
+# CLEAR DEMO EVENT LOG
+# ============================================================
+
+@app.route(
+    "/api/threat-events/clear",
+    methods=["POST"]
+)
+def clear_threat_events():
+
+    THREAT_EVENTS.clear()
+
+    return jsonify({
+        "status": "success",
+        "message": "Threat event log cleared",
+        "count": 0
+    })
+
+
+# ============================================================
+# SAVE THREAT EVENT
+# ============================================================
+
+def save_threat_event(
+    scenario,
+    result,
+    payload
+):
+
+    # --------------------------------------------------------
+    # CLASSIFY EVENT BASED ON DEMO SCENARIO
+    # --------------------------------------------------------
+
+    scenario_threat_types = {
+
+        "normal": "normal_login",
+
+        "suspicious": "suspicious_login",
+
+        "ato": "account_takeover"
+
+    }
+
+    threat_type = scenario_threat_types.get(
+
+        scenario,
+
+        result.get(
+            "threat_type",
+            "account_takeover"
+        )
+
+    )
+
+
+    # --------------------------------------------------------
+    # EXTRACT USEFUL INFORMATION FROM REAL FASTAPI RESPONSE
+    # --------------------------------------------------------
+
+    event = {
+
+        "timestamp":
+            datetime.now()
+            .astimezone()
+            .isoformat(),
+
+        "scenario":
+            scenario,
+
+        "event_id":
+            result.get(
+                "event_id",
+                "N/A"
+            ),
+
+        "threat_type":
+            threat_type,
+
+        "username":
+            payload.get(
+                "username",
+                "unknown"
+            ),
+
+        "ip_address":
+            payload.get(
+                "ip_address",
+                "unknown"
+            ),
+
+        "location":
+            payload.get(
+                "location",
+                "unknown"
+            ),
+
+        "device_id":
+            payload.get(
+                "device_id",
+                "unknown"
+            ),
+
+        "risk_score":
+            result.get(
+                "risk_score",
+                0
+            ),
+
+        "severity":
+            result.get(
+                "severity",
+                "Unknown"
+            ),
+
+        "decision":
+            result.get(
+                "decision",
+                "UNKNOWN"
+            ),
+
+        "login":
+            result.get(
+                "login",
+                "unknown"
+            ),
+
+        "indicators":
+            result.get(
+                "indicators",
+                []
+            ),
+
+        "explanation":
+            result.get(
+                "explanation",
+                ""
+            ),
+
+        "recommended_actions":
+            result.get(
+                "recommended_actions",
+                []
+            ),
+
+        "ml_detection":
+            result.get(
+                "ml_detection",
+                {}
+            ),
+
+        "rule_detection":
+            result.get(
+                "rule_detection",
+                {}
+            ),
+
+        "password_spraying":
+            result.get(
+                "password_spraying",
+                {}
+            ),
+
+        "session":
+            result.get(
+                "session",
+                {}
+            )
+
+    }
+
+
+    # --------------------------------------------------------
+    # NEWEST EVENTS APPEAR FIRST
+    # --------------------------------------------------------
+
+    THREAT_EVENTS.insert(
+        0,
+        event
+    )
+
+
+    # --------------------------------------------------------
+    # KEEP ONLY THE LATEST 50 EVENTS
+    # --------------------------------------------------------
+
+    del THREAT_EVENTS[MAX_EVENTS:]
+
+
+# ============================================================
+# LIVE THREAT SIMULATION
+# ============================================================
+
+@app.route(
+    "/api/simulate",
+    methods=["POST"]
+)
+def simulate():
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        ) or {}
+
+
+        scenario = data.get(
+            "scenario",
+            "normal"
+        )
+
+
+        # ====================================================
+        # DEMO SCENARIOS
+        # ====================================================
+
+        scenarios = {
+
+
+            # =================================================
+            # 1. NORMAL LOGIN
+            # =================================================
+
+            "normal": {
+
+                "username":
+                    "alice",
+
+                "password":
+                    "Alice@123",
+
+                "ip_address":
+                    "192.0.2.10",
+
+                "location":
+                    "Bhubaneswar",
+
+                "device_id":
+                    "DEV001",
+
+                "user_agent":
+                    "CyberGuard-Demo-Client"
+
+            },
+
+
+            # =================================================
+            # 2. SUSPICIOUS LOGIN
+            # =================================================
+
+            "suspicious": {
+
+                "username":
+                    "alice",
+
+                "password":
+                    "Alice@123",
+
+                "ip_address":
+                    "198.51.100.25",
+
+                "location":
+                    "Delhi",
+
+                "device_id":
+                    "NEW-DEVICE-001",
+
+                "user_agent":
+                    "CyberGuard-Demo-Client"
+
+            },
+
+
+            # =================================================
+            # 3. ACCOUNT TAKEOVER
+            # =================================================
+
+            "ato": {
+
+                "username":
+                    "alice",
+
+                "password":
+                    "WrongPassword@999",
+
+                "ip_address":
+                    "203.0.113.50",
+
+                "location":
+                    "Delhi",
+
+                "device_id":
+                    "UNKNOWN-ATTACKER-001",
+
+                "user_agent":
+                    "Unknown-Attacker-Agent"
+
+            }
+
+        }
+
+
+        # ====================================================
+        # VALIDATE SCENARIO
+        # ====================================================
+
+        payload = scenarios.get(
+            scenario
+        )
+
+
+        if payload is None:
+
+            return jsonify({
+
+                "error":
+                    "Invalid simulation scenario",
+
+                "available_scenarios": [
+
+                    "normal",
+
+                    "suspicious",
+
+                    "ato"
+
+                ]
+
+            }), 400
+
+
+        # ====================================================
+        # SEND REQUEST TO REAL ATO ENGINE
+        # ====================================================
+
+        response = requests.post(
+
+            f"{ATO_API}/login",
+
+            json=payload,
+
+            timeout=5
+
+        )
+
+
+        result = response.json()
+
+
+        # ====================================================
+        # SAVE REAL RESULT TO EVENT LOG
+        # ====================================================
+
+        save_threat_event(
+
+            scenario,
+
+            result,
+
+            payload
+
+        )
+
+
+        # ====================================================
+        # RETURN REAL ATO RESPONSE
+        # ====================================================
+
+        return jsonify(
+            result
+        ), response.status_code
+
+
+    # ========================================================
+    # ATO API CONNECTION ERROR
+    # ========================================================
+
+    except requests.exceptions.ConnectionError:
+
+        return jsonify({
+
+            "error":
+                "ATO API is offline. Start the FastAPI server on port 8000."
+
+        }), 503
+
+
+    # ========================================================
+    # ATO API TIMEOUT
+    # ========================================================
+
+    except requests.exceptions.Timeout:
+
+        return jsonify({
+
+            "error":
+                "ATO API request timed out."
+
+        }), 504
+
+
+    # ========================================================
+    # GENERAL ERROR
+    # ========================================================
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                str(e)
+
+        }), 500
+
+
+# ============================================================
+# RUN DASHBOARD
+# ============================================================
+
+if __name__ == "__main__":
+
+    app.run(
+
+        host="127.0.0.1",
+
+        port=8501,
+
+        debug=True
+
+    )

@@ -1,0 +1,32 @@
+CYBERGUARD ATO - ISOLATION FOREST V2
+MODEL EVALUATION
+==================================================
+
+Model   : isolation_forest_v2.pkl
+Dataset : ato_evaluation_data_v2.csv
+Samples : 3300
+
+Accuracy  : 0.8079
+Precision : 0.7029
+Recall    : 1.0000
+F1 Score  : 0.8255
+
+Detection Summary:
+True Normal     : 1166
+False Positives : 634
+False Negatives : 0
+True ATO        : 1500
+
+Confusion Matrix:
+[[1166  634]
+ [   0 1500]]
+
+Classification Report:
+                 precision    recall  f1-score   support
+
+         Normal       1.00      0.65      0.79      1800
+ATO / Anomalous       0.70      1.00      0.83      1500
+
+       accuracy                           0.81      3300
+      macro avg       0.85      0.82      0.81      3300
+   weighted avg       0.86      0.81      0.80      3300

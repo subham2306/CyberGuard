@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBERGUARD — Digital Threat Intelligence</title>
+    <meta name="description" content="CyberGuard analyzes messages, URLs, and QR codes using machine learning, threat intelligence, and explainable risk analysis.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- AMBIENT ENVIRONMENT & RADIAL GLOWS -->
+    <div class="cg-environment">
+        <div class="cg-grid"></div>
+        <div class="cg-light-field">
+            <div class="cg-light primary" id="ambientLightPrimary"></div>
+            <div class="cg-light secondary" id="ambientLightSecondary"></div>
+            <div class="cg-light tertiary"></div>
+        </div>
+        <div class="cg-particles-canvas-container">
+            <canvas id="cgParticlesCanvas"></canvas>
+        </div>
+    </div>
+
+    <!-- TOP FLOATING NAVIGATION CAPSULE -->
+    <header class="cg-nav-wrapper">
+        <nav class="cg-nav-capsule">
+            <div class="cg-brand" id="btnHome" role="button" tabindex="0" title="Return to CyberGuard Overview">
+                <div class="cg-logo-mark">
+                    <div class="cg-logo-ring"></div>
+                    <div class="cg-logo-ring inner"></div>
+                    <div class="cg-logo-core"></div>
+                </div>
+                <div class="cg-brand-text-group">
+                    <span class="cg-brand-text">CYBERGUARD</span>
+                    <span class="cg-brand-tag">THREAT INTELLIGENCE</span>
+                </div>
+            </div>
+
+            <div class="cg-nav-links">
+                <button class="cg-nav-link active" id="navAnalyze">
+                    <span class="nav-link-dot"></span>
+                    <span>ANALYZE</span>
+                </button>
+                <button class="cg-nav-link" id="navHistory">
+                    <span class="nav-link-dot"></span>
+                    <span>HISTORY</span>
+                    <span class="nav-badge" id="historyCountBadge">0</span>
+                </button>
+            </div>
+
+            <div class="cg-system-status" id="systemStatusPill" title="Connection status to ML Threat Engine">
+                <div class="status-beacon">
+                    <div class="status-dot connecting" id="systemDot"></div>
+                    <div class="status-pulse"></div>
+                </div>
+                <div class="status-text-stack">
+                    <span id="systemStatusText" class="cg-status-text">CONNECTING</span>
+                    <span class="cg-status-sub" id="systemSubText">PORT 8000/8001</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="cg-main">
+        <!-- ====================================================
+             1. DASHBOARD VIEW (HERO & INSTRUMENT ENTRY CARDS)
+             ==================================================== -->
+        <div id="dashboardView" class="dashboard-view">
+            <!-- HERO SECTION -->
+            <section class="cg-hero">
+                <div class="cg-hero-content">
+                    <div class="cg-hero-badge">
+                        <span class="badge-dot"></span>
+                        <span class="badge-text">CYBER THREAT INTELLIGENCE</span>
+                    </div>
+
+                    <h1 class="cg-hero-title">
+                        Detect the <span class="text-neon-glow">threat</span><br>
+                        <span class="text-gradient-accent">before it reaches you.</span>
+                    </h1>
+
+                    <p class="cg-hero-subtitle">
+                        CyberGuard analyzes messages, URLs and QR codes using machine learning, threat intelligence and explainable risk analysis.
+                    </p>
+
+                    <div class="cg-hero-actions">
+                        <button class="cg-btn-primary" id="btnHeroStartAnalysis">
+                            <span class="btn-text">START ANALYSIS</span>
+                            <span class="btn-icon">⚡</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                        <button class="cg-btn-secondary" id="btnHeroExplore">
+                            <span>EXPLORE INSTRUMENTS</span>
+                            <span class="btn-arrow">↓</span>
+                        </button>
+                    </div>
+
+                    <!-- Hero Live Telemetry Badges -->
+                    <div class="cg-hero-telemetry">
+                        <div class="telemetry-pill">
+                            <span class="pill-dot green"></span>
+                            <span class="pill-label">AI ENGINE:</span>
+                            <span class="pill-val">ACTIVE</span>
+                        </div>
+                        <div class="telemetry-pill">
+                            <span class="pill-dot green"></span>
+                            <span class="pill-label">URL INTEL:</span>
+                            <span class="pill-val">READY</span>
+                        </div>
+                        <div class="telemetry-pill">
+                            <span class="pill-dot pink"></span>
+                            <span class="pill-label">QR VISION:</span>
+                            <span class="pill-val">ONLINE</span>
+                        </div>
+                        <div class="telemetry-pill">
+                            <span class="pill-dot green"></span>
+                            <span class="pill-label">XAI ENGINE:</span>
+                            <span class="pill-val">CALIBRATED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: FUTURISTIC ANIMATED THREAT CORE -->
+                <div class="cg-hero-visual-wrapper">
+                    <div class="cg-threat-core-chamber" id="threatCoreVisual">
+                        <div class="core-reticle-ring"></div>
+                        <div class="core-compass-ticks"></div>
+                        <div class="core-svg-layer">
+                            <svg class="radar-svg" viewBox="0 0 400 400" aria-hidden="true">
+                                <circle class="radar-circle c1" cx="200" cy="200" r="180" />
+                                <circle class="radar-circle c2" cx="200" cy="200" r="140" />
+                                <circle class="radar-circle c3" cx="200" cy="200" r="100" />
+                                <circle class="radar-circle c4" cx="200" cy="200" r="60" />
+                                <line class="radar-axis" x1="20" y1="200" x2="380" y2="200" />
+                                <line class="radar-axis" x1="200" y1="20" x2="200" y2="380" />
+                                <!-- Sweeping radar beam -->
+                                <g class="radar-sweep-group">
+                                    <path class="radar-sweep-wedge" d="M 200 200 L 380 200 A 180 180 0 0 0 327 73 Z" />
+                                    <line class="radar-sweep-leading" x1="200" y1="200" x2="380" y2="200" />
+                                </g>
+                            </svg>
+                        </div>
+                        <!-- Orbiting Signal Nodes -->
+                        <div class="orbit-node node-1">
+                            <div class="node-dot"></div>
+                            <span class="node-tag">MSG.AI</span>
+                        </div>
+                        <div class="orbit-node node-2">
+                            <div class="node-dot"></div>
+                            <span class="node-tag">URL.SCAN</span>
+                        </div>
+                        <div class="orbit-node node-3">
+                            <div class="node-dot"></div>
+                            <span class="node-tag">QR.VISION</span>
+                        </div>
+                        <div class="orbit-node node-4">
+                            <div class="node-dot"></div>
+                            <span class="node-tag">XAI.ATTRIB</span>
+                        </div>
+
+                        <!-- Central Pulsing Core -->
+                        <div class="core-heart">
+                            <div class="heart-pulse-glow"></div>
+                            <div class="heart-glass-disc">
+                                <div class="core-logo-mark"></div>
+                                <div class="core-title">THREAT CORE</div>
+                                <div class="core-status">ACTIVE / MONITORING</div>
+                                <div class="core-freq">0.998 CONFIDENCE</div>
+                            </div>
+                        </div>
+
+                        <!-- Floating HUD Telemetry Tiles -->
+                        <div class="hud-card hud-top-left">
+                            <span class="hud-label">THREAT ENGINE</span>
+                            <span class="hud-val text-neon">ONLINE</span>
+                        </div>
+                        <div class="hud-card hud-top-right">
+                            <span class="hud-label">HYBRID ML</span>
+                            <span class="hud-val text-neon">READY</span>
+                        </div>
+                        <div class="hud-card hud-bottom-left">
+                            <span class="hud-label">XAI ENGINE</span>
+                            <span class="hud-val text-pink">ACTIVE</span>
+                        </div>
+                        <div class="hud-card hud-bottom-right">
+                            <span class="hud-label">RISK CALIBRATION</span>
+                            <span class="hud-val text-neon">ISOTONIC</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ANALYSIS ENTRY CARDS SECTION -->
+            <section class="cg-dock-section" id="instrumentsDockSection">
+                <div class="dock-header">
+                    <div class="dock-title-group">
+                        <span class="dock-kicker">COMMAND CAPABILITIES</span>
+                        <h2 class="dock-title">SECURITY ANALYSIS INSTRUMENTS</h2>
+                    </div>
+                    <span class="dock-hint">SELECT AN ATTACK VECTOR TO INITIATE LIVE INFERENCE</span>
+                </div>
+
+                <div class="cg-instruments-dock">
+                    <!-- CARD 1: MESSAGE -->
+                    <div class="instrument-card portal-card mode-tab active" data-target="message-panel" role="button" tabindex="0">
+                        <div class="card-edge-glow"></div>
+                        <div class="card-top-row">
+                            <span class="card-num">01</span>
+                            <div class="card-icon-chamber">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">MESSAGE</h3>
+                            <p class="card-desc">Detect suspicious language, phishing patterns and social-engineering signals.</p>
+                            <div class="card-tags">
+                                <span class="tag">EMAIL</span>
+                                <span class="tag">SMS</span>
+                                <span class="tag">SOCIAL MEDIA</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-action">OPEN ANALYZER</span>
+                            <span class="card-arrow">→</span>
+                        </div>
+                    </div>
+
+                    <!-- CARD 2: URL -->
+                    <div class="instrument-card portal-card mode-tab" data-target="url-panel" role="button" tabindex="0">
+                        <div class="card-edge-glow"></div>
+                        <div class="card-top-row">
+                            <span class="card-num">02</span>
+                            <div class="card-icon-chamber">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="2" y1="12" x2="22" y2="12"/>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">URL</h3>
+                            <p class="card-desc">Analyze URL structure, domain characteristics and malicious indicators.</p>
+                            <div class="card-tags">
+                                <span class="tag">LEXICAL</span>
+                                <span class="tag">TLD INTEL</span>
+                                <span class="tag">ENTROPY</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-action">OPEN ANALYZER</span>
+                            <span class="card-arrow">→</span>
+                        </div>
+                    </div>
+
+                    <!-- CARD 3: QR CODE -->
+                    <div class="instrument-card portal-card mode-tab" data-target="qr-panel" role="button" tabindex="0">
+                        <div class="card-edge-glow"></div>
+                        <div class="card-top-row">
+                            <span class="card-num">03</span>
+                            <div class="card-icon-chamber">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">QR CODE</h3>
+                            <p class="card-desc">Decode QR codes and analyze the decoded destination through deep URL intelligence.</p>
+                            <div class="card-tags">
+                                <span class="tag">VISION DECODE</span>
+                                <span class="tag">URL PIPELINE</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-action">OPEN ANALYZER</span>
+                            <span class="card-arrow">→</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CINEMATIC FOOTER -->
+            <footer class="cg-cinematic-footer">
+                <div class="footer-grid">
+                    <div class="footer-col-brand">
+                        <div class="footer-title">YOUR DIGITAL<br>TRUST LAYER.</div>
+                        <p class="footer-sub">CYBERGUARD DIGITAL THREAT INTELLIGENCE PLATFORM</p>
+                    </div>
+                    <div class="footer-col-meta">
+                        <div class="footer-meta-pill">AI MULTI-MODAL PIPELINE</div>
+                        <div class="footer-meta-pill">ISOTONIC RISK CALIBRATION</div>
+                        <div class="footer-meta-pill">EXPLAINABLE AI (XAI)</div>
+                    </div>
+                </div>
+                <div class="footer-bottom-row">
+                    <div class="footer-copy">© 2026 CYBERGUARD SECURITY AI. BPUT HACKATHON. ALL RIGHTS RESERVED.</div>
+                    <div class="footer-status-tag">SYSTEM STATUS: ALL ENGINES OPERATIONAL</div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- ====================================================
+             2. HISTORY VIEW (LOCAL AUDIT TRAIL)
+             ==================================================== -->
+        <div id="historyView" class="cg-workspace history-workspace hidden">
+            <div class="cg-workspace-header">
+                <div class="cg-workspace-title-group">
+                    <div class="cg-workspace-meta">CYBERGUARD // AUDIT TRAIL</div>
+                    <h2 class="cg-workspace-title">ANALYSIS HISTORY</h2>
+                    <p class="cg-workspace-desc">Stored verification assessments and intelligence reports from your current session.</p>
+                </div>
+                <div class="cg-workspace-header-actions">
+                    <button class="cg-btn-minimal" id="btnClearHistory">✕ CLEAR HISTORY</button>
+                    <button class="cg-btn-minimal" id="btnBackFromHistory">← BACK</button>
+                </div>
+            </div>
+
+            <!-- History Filter Tabs -->
+            <div class="history-filter-bar">
+                <button class="filter-pill active" data-filter="ALL">ALL ASSESSMENTS</button>
+                <button class="filter-pill" data-filter="MESSAGE">MESSAGES</button>
+                <button class="filter-pill" data-filter="URL">DIRECT URLS</button>
+                <button class="filter-pill" data-filter="QR">QR CODES</button>
+            </div>
+
+            <div id="historyEmptyState" class="history-empty-chamber hidden">
+                <div class="empty-icon">◷</div>
+                <h3 class="empty-title">NO SECURITY ASSESSMENTS YET</h3>
+                <p class="empty-desc">Your completed threat scans will appear here automatically with full risk scores, detected indicators, and guidance.</p>
+                <button class="cg-btn-primary" id="btnHistoryStartScan">START FIRST ANALYSIS</button>
+            </div>
+
+            <div id="historyListContainer" class="history-cards-container">
+                <!-- Dynamically populated by UI manager -->
+            </div>
+        </div>
+
+        <!-- ====================================================
+             3. MAIN ANALYSIS WORKSPACE
+             ==================================================== -->
+        <div id="workspaceView" class="workspace-view cg-workspace hidden">
+            <!-- Workspace Top Bar -->
+            <div class="cg-workspace-header">
+                <div class="cg-workspace-title-group">
+                    <div class="cg-workspace-meta" id="workspaceSubtitle">CYBERGUARD / ANALYSIS / MESSAGE</div>
+                    <h2 class="cg-workspace-title" id="workspaceTitle">MESSAGE INTELLIGENCE</h2>
+                    <p class="cg-workspace-desc" id="workspaceDesc">Inspect conversations and emails before interacting with them.</p>
+                </div>
+                <div class="cg-workspace-header-actions">
+                    <button class="cg-btn-minimal" id="btnBackToDashboard">← BACK</button>
+                </div>
+            </div>
+
+            <!-- PRIMARY COMMAND SWITCHER (SEGMENTED CONTROL) -->
+            <div class="cg-command-switcher-wrapper">
+                <div class="cg-command-switcher" role="tablist">
+                    <button class="switcher-tab active" data-mode="message" id="tabModeMessage" role="tab" aria-selected="true">
+                        <span class="switcher-icon">✉️</span>
+                        <span class="switcher-text">MESSAGE</span>
+                    </button>
+                    <button class="switcher-tab" data-mode="url" id="tabModeUrl" role="tab" aria-selected="false">
+                        <span class="switcher-icon">🔗</span>
+                        <span class="switcher-text">URL</span>
+                    </button>
+                    <button class="switcher-tab" data-mode="qr" id="tabModeQr" role="tab" aria-selected="false">
+                        <span class="switcher-icon">⛶</span>
+                        <span class="switcher-text">QR CODE</span>
+                    </button>
+                    <div class="switcher-slider" id="switcherSlider"></div>
+                </div>
+            </div>
+
+            <div class="cg-workspace-layout">
+                <!-- Left/Center Main Analysis Chamber -->
+                <div class="cg-workspace-primary cg-glass-2" id="mainChamberCard">
+
+                    <!-- ====================================================
+                         MODE A: MESSAGE INTELLIGENCE
+                         ==================================================== -->
+                    <div id="message-panel" class="input-section active-section">
+                        <!-- Message Sub-selector (Email / SMS / Social Media) -->
+                        <div class="cg-sub-selector-container">
+                            <div class="cg-sub-selector" role="tablist">
+                                <button class="sub-tab active" data-channel="EMAIL" id="subTabEmail">
+                                    <span class="sub-tab-dot"></span>
+                                    <span>EMAIL</span>
+                                </button>
+                                <button class="sub-tab" data-channel="SMS" id="subTabSms">
+                                    <span class="sub-tab-dot"></span>
+                                    <span>SMS</span>
+                                </button>
+                                <button class="sub-tab" data-channel="SOCIAL" id="subTabSocial">
+                                    <span class="sub-tab-dot"></span>
+                                    <span>SOCIAL MEDIA</span>
+                                </button>
+                            </div>
+                            <span class="sub-selector-info" id="messageChannelBadge">EMAIL ANALYZER</span>
+                        </div>
+
+                        <!-- SUB-VIEW 1: EMAIL UI -->
+                        <div class="message-sub-view active" id="subViewEmail">
+                            <div class="cg-field-group">
+                                <label for="msgSubject" class="cg-field-label">
+                                    <span>SUBJECT LINE</span>
+                                    <span class="field-optional">(OPTIONAL)</span>
+                                </label>
+                                <input type="text" id="msgSubject" class="cg-input-field" placeholder="e.g. URGENT: Account suspension notice / Verify credentials">
+                            </div>
+
+                            <div class="cg-field-group">
+                                <div class="field-label-row">
+                                    <label for="msgInput" class="cg-field-label">EMAIL BODY</label>
+                                    <span id="msgCharCount" class="cg-char-counter">0 / 5000 characters</span>
+                                </div>
+                                <div class="cg-input-chamber">
+                                    <textarea id="msgInput" class="cg-textarea" placeholder="Paste the suspicious email here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUB-VIEW 2: SMS UI -->
+                        <div class="message-sub-view hidden" id="subViewSms">
+                            <div class="cg-field-group">
+                                <div class="field-label-row">
+                                    <label for="smsInput" class="cg-field-label">SMS / SMISHING TEXT</label>
+                                    <span id="smsCharCount" class="cg-char-counter">0 / 5000 characters</span>
+                                </div>
+                                <div class="cg-input-chamber">
+                                    <textarea id="smsInput" class="cg-textarea" placeholder="Paste the suspicious SMS here (e.g. Bank alert, package delivery failure, OTP scam)..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUB-VIEW 3: SOCIAL MEDIA UI -->
+                        <div class="message-sub-view hidden" id="subViewSocial">
+                            <div class="social-platform-row">
+                                <span class="platform-label">PLATFORM CONTEXT:</span>
+                                <div class="platform-chips">
+                                    <button class="platform-chip active" data-platform="WhatsApp">WhatsApp</button>
+                                    <button class="platform-chip" data-platform="Instagram">Instagram</button>
+                                    <button class="platform-chip" data-platform="Telegram">Telegram</button>
+                                    <button class="platform-chip" data-platform="Messenger">Messenger</button>
+                                    <button class="platform-chip" data-platform="Other">Other</button>
+                                </div>
+                            </div>
+
+                            <div class="cg-field-group">
+                                <div class="field-label-row">
+                                    <label for="socialInput" class="cg-field-label">CHAT / SOCIAL MESSAGE</label>
+                                    <span id="socialCharCount" class="cg-char-counter">0 / 5000 characters</span>
+                                </div>
+                                <div class="cg-input-chamber chat-styled">
+                                    <textarea id="socialInput" class="cg-textarea" placeholder="Paste a suspicious social-media or chat message..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Loaders & Action Row -->
+                        <div class="cg-action-bar">
+                            <div class="sample-chips-row">
+                                <span class="samples-title">DEMO SAMPLES:</span>
+                                <button class="sample-chip phishing" id="btnSampleMsgPhishing" title="Load sample phishing alert">
+                                    ⚠️ Urgent Phishing
+                                </button>
+                                <button class="sample-chip benign" id="btnSampleMsgBenign" title="Load benign team message">
+                                    ✓ Safe Message
+                                </button>
+                            </div>
+
+                            <button id="btnAnalyzeMsg" class="cg-liquid-btn">
+                                <span class="btn-main-label">ANALYZE MESSAGE</span>
+                                <span class="btn-arrow-icon">→</span>
+                                <div class="btn-subtext">DUAL-BRANCH ML INFERENCE</div>
+                                <div class="liquid-glare"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ====================================================
+                         MODE B: URL INTELLIGENCE
+                         ==================================================== -->
+                    <div id="url-panel" class="input-section">
+                        <div class="section-meta-header">
+                            <span class="meta-tag">DIRECT DESTINATION VERIFICATION</span>
+                            <span class="meta-desc">Analyze URL structure, domain characteristics and suspicious patterns.</span>
+                        </div>
+
+                        <div class="cg-field-group">
+                            <label for="urlInput" class="cg-field-label">DESTINATION URL</label>
+                            <div class="cg-url-chamber">
+                                <div class="url-protocol-badge">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    <span>https://</span>
+                                </div>
+                                <input type="url" id="urlInput" class="cg-url-input" placeholder="https://secure-login-example.xyz/verify?token=892">
+                            </div>
+                        </div>
+
+                        <!-- Network Visualization Graphic -->
+                        <div class="url-network-visual">
+                            <div class="network-nodes">
+                                <div class="net-node client active">CLIENT</div>
+                                <div class="net-beam"></div>
+                                <div class="net-node gateway">DNS / TLD</div>
+                                <div class="net-beam"></div>
+                                <div class="net-node destination">DESTINATION</div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Loaders & Action Row -->
+                        <div class="cg-action-bar">
+                            <div class="sample-chips-row">
+                                <span class="samples-title">DEMO SAMPLES:</span>
+                                <button class="sample-chip phishing" id="btnSampleUrlPhishing" title="Load sample malicious Apple phishing URL">
+                                    ⚠️ Apple Phishing (.xyz)
+                                </button>
+                                <button class="sample-chip benign" id="btnSampleUrlBenign" title="Load safe Wikipedia URL">
+                                    ✓ Wikipedia (Safe)
+                                </button>
+                            </div>
+
+                            <button id="btnAnalyzeUrl" class="cg-liquid-btn">
+                                <span class="btn-main-label">ANALYZE URL</span>
+                                <span class="btn-arrow-icon">→</span>
+                                <div class="btn-subtext">HYBRID URL INTELLIGENCE</div>
+                                <div class="liquid-glare"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ====================================================
+                         MODE C: QR THREAT SCANNER
+                         ==================================================== -->
+                    <div id="qr-panel" class="input-section">
+                        <div class="section-meta-header">
+                            <span class="meta-tag">OPTICAL THREAT INTERCEPTION</span>
+                            <span class="meta-desc">Decode QR matrix, extract encoded payload, and analyze target through URL intelligence.</span>
+                        </div>
+
+                        <!-- QR Drop Zone & Chamber -->
+                        <div class="cg-qr-chamber" id="qrDropZone">
+                            <div class="qr-brackets">
+                                <div class="bracket tl"></div>
+                                <div class="bracket tr"></div>
+                                <div class="bracket bl"></div>
+                                <div class="bracket br"></div>
+                            </div>
+                            <div class="qr-scan-beam" id="qrScanBeam"></div>
+
+                            <!-- Placeholder Content (No file loaded) -->
+                            <div class="cg-qr-placeholder" id="qrPlaceholderContent">
+                                <div class="qr-chamber-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="3" y="3" width="7" height="7"/>
+                                        <rect x="14" y="3" width="7" height="7"/>
+                                        <rect x="3" y="14" width="7" height="7"/>
+                                        <path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 18h1v3h-1zM18 14h3v1h-3z"/>
+                                    </svg>
+                                </div>
+                                <div class="qr-drop-title">DROP QR IMAGE HERE</div>
+                                <div class="qr-drop-sub">OR CLICK TO BROWSE LOCAL FILES</div>
+                                <div class="qr-formats-pill">PNG • JPG • JPEG • WEBP</div>
+                                <button id="btnBrowseQr" class="cg-btn-outline">SELECT QR IMAGE</button>
+                            </div>
+
+                            <input type="file" id="qrFileInput" accept="image/png, image/jpeg, image/webp" hidden>
+
+                            <!-- Preview Chamber (File loaded) -->
+                            <div id="qrPreviewContainer" class="cg-qr-preview hidden">
+                                <div class="preview-header">
+                                    <span class="preview-status-tag">MATRIX LOADED</span>
+                                    <button id="btnClearQr" class="cg-btn-text" title="Remove image">✕ REMOVE</button>
+                                </div>
+                                <div class="preview-media-box">
+                                    <img id="qrPreview" src="" alt="QR Preview">
+                                    <div class="reticle-overlay"></div>
+                                </div>
+                                <div class="preview-meta-row">
+                                    <span id="qrFileName" class="qr-file-name">matrix.png</span>
+                                    <span id="qrFileSize" class="qr-file-size">0 KB</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Loaders & Action Row -->
+                        <div class="cg-action-bar">
+                            <div class="sample-chips-row">
+                                <span class="samples-title">DEMO SAMPLES:</span>
+                                <button class="sample-chip phishing" id="btnSampleQrPhishing" title="Load real malicious Apple QR code from tests">
+                                    ⚠️ Malicious QR
+                                </button>
+                                <button class="sample-chip benign" id="btnSampleQrBenign" title="Load real Wikipedia QR code from tests">
+                                    ✓ Benign QR
+                                </button>
+                            </div>
+
+                            <button id="btnAnalyzeQr" class="cg-liquid-btn" disabled>
+                                <span class="btn-main-label">ANALYZE QR</span>
+                                <span class="btn-arrow-icon">→</span>
+                                <div class="btn-subtext">DECODE & DEEP-SCAN</div>
+                                <div class="liquid-glare"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ====================================================
+                         DYNAMIC LOADING OVERLAY (AI INFERENCE)
+                         ==================================================== -->
+                    <div id="loadingState" class="hidden loading-overlay cg-loading-glass">
+                        <div class="cg-loading-spinner-wrapper">
+                            <div class="spinner-ring outer"></div>
+                            <div class="spinner-ring inner"></div>
+                            <div class="spinner-center-dot"></div>
+                        </div>
+                        <div class="cg-loading-brand" id="loadingBrandTitle">AI THREAT INFERENCE</div>
+                        <div class="cg-loading-subtitle" id="loadingSubtext">ANALYZING SIGNAL SIGNATURES</div>
+                        <div class="cg-loading-steps">
+                            <div class="load-step active" id="loadStep1">
+                                <div class="step-indicator"></div>
+                                <span class="step-text" id="step1Text">INPUT RECEIVED ✓</span>
+                            </div>
+                            <div class="load-step" id="loadStep2">
+                                <div class="step-indicator"></div>
+                                <span class="step-text" id="step2Text">EXTRACTING PROGRAMMATIC FEATURES ●</span>
+                            </div>
+                            <div class="load-step" id="loadStep3">
+                                <div class="step-indicator"></div>
+                                <span class="step-text" id="step3Text">RUNNING HYBRID MODEL INFERENCE ○</span>
+                            </div>
+                            <div class="load-step" id="loadStep4">
+                                <div class="step-indicator"></div>
+                                <span class="step-text" id="step4Text">ISOTONIC RISK CALIBRATION & XAI ○</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Context Sidebar (Telemetry & Engine State) -->
+                <aside class="cg-workspace-secondary cg-glass-1">
+                    <div class="context-block">
+                        <div class="context-label">INPUT VECTOR</div>
+                        <div class="context-val text-neon" id="contextSignalValue">MESSAGE / EMAIL</div>
+                    </div>
+                    <div class="context-block">
+                        <div class="context-label">THREAT ENGINE</div>
+                        <div class="context-val text-neon" id="contextEngineStatus">READY (HYBRID)</div>
+                    </div>
+                    <div class="context-block">
+                        <div class="context-label">XAI ATTRIBUTION</div>
+                        <div class="context-val text-pink">DUAL GRADIENT + RULE</div>
+                    </div>
+                    <div class="context-block">
+                        <div class="context-label">PIPELINE INTEGRITY</div>
+                        <div class="context-val text-neon">CALIBRATED (0-100)</div>
+                    </div>
+
+                    <div class="context-divider"></div>
+
+                    <div class="context-note">
+                        <div class="note-title">OPERATIONAL NOTICE</div>
+                        <p class="note-body">Inference evaluates semantic features, programmatic signals, and calibrated severity tiers without external network exposure.</p>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- ====================================================
+                 4. UNIFIED RESULT SCREEN
+                 ==================================================== -->
+            <div id="resultScreen" class="result-panel hidden cg-result-screen env-low">
+                <!-- Atmospheric Glow Background -->
+                <div class="cg-result-atmosphere"></div>
+
+                <!-- Result Header Bar -->
+                <div class="cg-result-header">
+                    <button class="cg-btn-minimal" id="btnBackToInput">← BACK TO INPUT</button>
+                    <div class="result-header-meta">
+                        <span class="audit-tag">SECURITY ASSESSMENT</span>
+                        <span class="audit-timestamp" id="resultTimestamp">JUST NOW</span>
+                    </div>
+                    <button id="btnReset" class="cg-btn-outline">+ NEW ANALYSIS</button>
+                </div>
+
+                <!-- Result Main Layout (2 Columns) -->
+                <div class="cg-result-layout cg-glass-1" id="resultCard">
+                    <!-- LEFT COLUMN: Risk Score Visualization & Telemetry Stack -->
+                    <div class="result-left-column">
+                        <div class="cg-score-visual" id="riskCore">
+                            <div class="risk-core-layer layer-glow"></div>
+                            <div class="risk-core-layer layer-orbit"></div>
+                            
+                            <!-- Circular SVG Gauge -->
+                            <div class="risk-core-layer layer-arc">
+                                <svg class="cg-score-svg" viewBox="0 0 200 200">
+                                    <circle class="score-bg" cx="100" cy="100" r="90" />
+                                    <circle class="score-progress" cx="100" cy="100" r="90" id="riskGaugePath" />
+                                </svg>
+                            </div>
+
+                            <div class="risk-core-layer layer-tech"></div>
+                            <div class="risk-core-layer layer-glass cg-glass-2"></div>
+
+                            <div class="risk-core-content">
+                                <div class="score-sub-label">CALIBRATED THREAT</div>
+                                <div class="score-label">RISK SCORE</div>
+                                <div class="score-value-wrapper">
+                                    <span id="riskScoreValue" class="cg-huge-score">00</span>
+                                    <span class="cg-score-max">/100</span>
+                                </div>
+                                <div id="riskSeverityLabel" class="cg-severity-label">LOW</div>
+                            </div>
+                        </div>
+
+                        <!-- Telemetry Summary Stack -->
+                        <div class="result-summary-stack">
+                            <div class="info-panel">
+                                <span class="info-label">CLASSIFICATION</span>
+                                <span class="info-val" id="summaryClassification">BENIGN</span>
+                            </div>
+                            <div class="info-panel">
+                                <span class="info-label">PROBABILITY</span>
+                                <span class="info-val" id="summaryProbability">1.5%</span>
+                            </div>
+                            <div class="info-panel">
+                                <span class="info-label">ACTION TIER</span>
+                                <span class="info-val action-text" id="summaryAction">ALLOW</span>
+                            </div>
+                            <div class="info-panel">
+                                <span class="info-label">INPUT VECTOR</span>
+                                <span class="info-val" id="summaryTargetType">MESSAGE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: Detailed Threat Insights, QR URL & Explanations -->
+                    <div class="cg-report-details">
+                        <!-- Decoded QR Box (Visible when QR decoded) -->
+                        <div id="extractedContentBox" class="cg-insight-card qr-decoded-box hidden">
+                            <div class="insight-label-row">
+                                <div class="badge-status-green">QR DECODE SUCCESS</div>
+                                <span class="insight-meta">EXTRACTED DESTINATION</span>
+                            </div>
+                            <div class="qr-decoded-target">
+                                <span class="target-protocol">URL:</span>
+                                <span class="insight-value" id="extractedText">https://...</span>
+                                <button class="btn-copy-url" id="btnCopyDecodedUrl" title="Copy URL">COPY</button>
+                            </div>
+                            <div class="qr-pipeline-note">
+                                <span>PIPELINE:</span> QR Matrix Vision → Decoded URL → Unified URL Intelligence Engine
+                            </div>
+                        </div>
+
+                        <!-- Submitted Input Toggle Box -->
+                        <div id="viewInputBox" class="cg-insight-card input-preview-card">
+                            <div class="insight-label" id="btnToggleInput" role="button" tabindex="0">
+                                <span id="inputContextType">ANALYZED CONTENT</span>
+                                <span class="toggle-icon">VIEW INPUT ▾</span>
+                            </div>
+                            <div class="insight-value hidden" id="originalInputText"></div>
+                        </div>
+
+                        <!-- Why Suspicious / XAI Section -->
+                        <div class="cg-report-title-group">
+                            <h3 class="cg-report-title">WHY THIS WAS FLAGGED</h3>
+                            <span class="cg-report-subtitle">EXPLAINABLE AI (XAI) ATTRIBUTION & STRUCTURAL INDICATORS</span>
+                        </div>
+
+                        <div id="xaiBox" class="xai-container">
+                            <div class="cg-insight-blocks" id="explanationList">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Recommendation Box -->
+                        <div id="recommendationBox" class="cg-insight-card recommendation-card">
+                            <div class="recommendation-header">
+                                <span class="rec-label">RECOMMENDED ACTION</span>
+                                <div class="action-badge-pill" id="recommendationAction">ALLOW</div>
+                            </div>
+                            <div class="rec-desc" id="recommendationText">Content appears safe based on calibrated security signals.</div>
+                        </div>
+
+                        <!-- Report Action Buttons -->
+                        <div class="result-actions-row">
+                            <button class="cg-btn-outline" id="btnCopyReport">
+                                <span>COPY THREAT REPORT</span>
+                                <span class="btn-icon">📋</span>
+                            </button>
+                            <button class="cg-btn-primary" id="btnNewAnalysis">
+                                <span>NEW ANALYSIS</span>
+                                <span class="btn-icon">→</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Back Bar -->
+                <div class="cg-result-bottom-nav">
+                    <button class="cg-btn-minimal" id="btnBackToInputBottom">← BACK TO ANALYSIS</button>
+                    <button id="btnResetBottom" class="cg-btn-outline">+ NEW ANALYSIS</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="toast-container cg-toast-container" aria-live="polite"></div>
+
+    <!-- SCRIPTS -->
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

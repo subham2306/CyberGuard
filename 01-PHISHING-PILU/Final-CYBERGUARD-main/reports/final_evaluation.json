@@ -1,0 +1,66 @@
+{
+  "Random Test": {
+    "samples": 8824,
+    "accuracy": 97.89,
+    "precision": 98.74,
+    "recall": 96.55,
+    "f1": 97.63,
+    "roc_auc": 0.9937,
+    "false_positive_rate": 1.01,
+    "false_negative_rate": 3.45,
+    "confusion_matrix": {
+      "tp": 3833,
+      "fp": 49,
+      "tn": 4805,
+      "fn": 137
+    }
+  },
+  "Unseen Domain Test": {
+    "samples": 16129,
+    "accuracy": 96.11,
+    "precision": 98.84,
+    "recall": 92.15,
+    "f1": 95.38,
+    "roc_auc": 0.9916,
+    "false_positive_rate": 0.83,
+    "false_negative_rate": 7.85,
+    "confusion_matrix": {
+      "tp": 6470,
+      "fp": 76,
+      "tn": 9032,
+      "fn": 551
+    }
+  },
+  "Unseen QR Test": {
+    "samples": 5942,
+    "accuracy": 98.94,
+    "precision": 98.25,
+    "recall": 98.98,
+    "f1": 98.61,
+    "roc_auc": 0.9981,
+    "false_positive_rate": 1.09,
+    "false_negative_rate": 1.02,
+    "confusion_matrix": {
+      "tp": 2242,
+      "fp": 40,
+      "tn": 3637,
+      "fn": 23
+    }
+  },
+  "Temporal Test": {
+    "samples": 600,
+    "accuracy": 97.0,
+    "precision": 97.96,
+    "recall": 96.0,
+    "f1": 96.97,
+    "roc_auc": 0.9923,
+    "false_positive_rate": 2.0,
+    "false_negative_rate": 4.0,
+    "confusion_matrix": {
+      "tp": 288,
+      "fp": 6,
+      "tn": 294,
+      "fn": 12
+    }
+  }
+}

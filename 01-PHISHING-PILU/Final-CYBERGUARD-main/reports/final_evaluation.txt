@@ -1,0 +1,44 @@
+======================================================================
+FINAL EVALUATION & GENERALIZATION REPORT
+======================================================================
+
+--- Random Test (8824 samples) ---
+  Accuracy:            97.89%
+  Precision:           98.74%
+  Recall:              96.55%
+  F1 Score:            97.63%
+  ROC-AUC:             0.9937
+  False Positive Rate: 1.01%
+  False Negative Rate: 3.45%
+  TP: 3833, FP: 49, TN: 4805, FN: 137
+
+--- Unseen Domain Test (16129 samples) ---
+  Accuracy:            96.11%
+  Precision:           98.84%
+  Recall:              92.15%
+  F1 Score:            95.38%
+  ROC-AUC:             0.9916
+  False Positive Rate: 0.83%
+  False Negative Rate: 7.85%
+  TP: 6470, FP: 76, TN: 9032, FN: 551
+
+--- Unseen QR Test (5942 samples) ---
+  Accuracy:            98.94%
+  Precision:           98.25%
+  Recall:              98.98%
+  F1 Score:            98.61%
+  ROC-AUC:             0.9981
+  False Positive Rate: 1.09%
+  False Negative Rate: 1.02%
+  TP: 2242, FP: 40, TN: 3637, FN: 23
+
+--- Temporal Test (600 samples) ---
+  Accuracy:            97.0%
+  Precision:           97.96%
+  Recall:              96.0%
+  F1 Score:            96.97%
+  ROC-AUC:             0.9923
+  False Positive Rate: 2.0%
+  False Negative Rate: 4.0%
+  TP: 288, FP: 6, TN: 294, FN: 12
+

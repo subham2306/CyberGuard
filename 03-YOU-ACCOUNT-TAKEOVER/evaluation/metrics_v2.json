@@ -1,0 +1,18 @@
+{
+    "dataset": "ato_evaluation_data_v2.csv",
+    "samples": 3300,
+    "accuracy": 0.8079,
+    "precision": 0.7029,
+    "recall": 1.0,
+    "f1_score": 0.8255,
+    "confusion_matrix": [
+        [
+            1166,
+            634
+        ],
+        [
+            0,
+            1500
+        ]
+    ]
+}

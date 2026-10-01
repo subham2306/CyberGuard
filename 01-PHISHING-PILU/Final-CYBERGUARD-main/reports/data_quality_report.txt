@@ -1,0 +1,26 @@
+============================================================
+DATA QUALITY & SANITIZATION AUDIT REPORT
+============================================================
+1. INGESTION SUMMARY:
+   - Existing URL Dataset ingested: 50000
+   - QR Decoded Dataset ingested:   50000
+   - Total Raw Consolidated:       100000
+
+2. LABEL STANDARDIZATION:
+   - Target Convention: 0 = BENIGN, 1 = MALICIOUS
+   - Existing URL Dataset: Inverted inverted ground truth (raw 1 -> 0, raw 0 -> 1)
+   - QR Decoded Dataset: Direct mapping (0 -> 0, 1 -> 1)
+
+3. SANITIZATION & DUPLICATE ANALYSIS:
+   - Conflicting URLs flagged & quarantined: 0
+   - Exact duplicates removed: 19103
+   - Final High-Fidelity Clean URLs: 80897
+   - Benign Count (0):    45143 (55.80%)
+   - Malicious Count (1): 35754 (44.20%)
+
+4. GENERALIZATION STRATEGY:
+   - Test A: Standard Stratified Holdout (15%)
+   - Test B: Unseen Domain Zero-Leakage Split (15% disjoint domain clusters)
+   - Test C: Unseen QR Holdout (25% held out completely from training)
+   - Test D: Temporal / Campaign Mutation Shift (Complex, high-entropy payload subset)
+============================================================

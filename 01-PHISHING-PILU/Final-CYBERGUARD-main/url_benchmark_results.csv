@@ -1,0 +1,5 @@
+Test Suite,Samples,Accuracy,Precision,Recall,F1 Score,ROC-AUC,ECE,TP,FP,TN,FN
+Test 1 (Standard Stratified Random),8824,97.89%,98.74%,96.55%,97.63%,0.9937,0.37%,3833,49,4805,137
+Test 2 (Unseen Domains - Zero Leakage),16129,96.11%,98.84%,92.15%,95.38%,0.9916,2.49%,6470,76,9032,551
+Test 3 (Unseen QR Decoded URLs),5942,98.94%,98.25%,98.98%,98.61%,0.9981,1.35%,2242,40,3637,23
+Test 4 (Temporal / Mutation Shift),600,97.00%,97.96%,96.00%,96.97%,0.9923,1.02%,288,6,294,12

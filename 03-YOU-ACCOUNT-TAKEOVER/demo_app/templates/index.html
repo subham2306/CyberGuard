@@ -1,0 +1,2892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="CyberGuard AI Powered Account Takeover Detection and Response System"
+    >
+
+    <title>CyberGuard ATO Sentinel</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛡
+            </div>
+
+            <div class="brand-text">
+
+                <h1>
+                    CYBERGUARD
+                </h1>
+
+                <span>
+                    ATO SENTINEL
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                class="nav-item active"
+                href="#dashboard"
+            >
+                <span class="nav-icon">▣</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="#threat-monitor"
+            >
+                <span class="nav-icon">◉</span>
+                <span>Threat Monitor</span>
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="#sessions"
+            >
+                <span class="nav-icon">◈</span>
+                <span>Sessions</span>
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="#blocked-sources"
+            >
+                <span class="nav-icon">⚠</span>
+                <span>Blocked Sources</span>
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="#system"
+            >
+                <span class="nav-icon">⚙</span>
+                <span>System</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="connection-card">
+
+                <span class="connection-dot"></span>
+
+                <div>
+
+                    <strong>
+                        ATO API
+                    </strong>
+
+                    <small id="api-status">
+                        Checking...
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="version">
+                CyberGuard ATO v1.5
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="main">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="eyebrow">
+                    SECURITY OPERATIONS CENTER
+                </p>
+
+                <h2>
+                    Account Takeover Detection
+                </h2>
+
+                <p class="header-subtitle">
+                    AI-powered authentication threat monitoring,
+                    anomaly detection and automated response.
+                </p>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div class="system-status">
+
+                    <span class="status-dot"></span>
+
+                    SYSTEM ONLINE
+
+                </div>
+
+                <div
+                    class="current-time"
+                    id="current-time"
+                >
+                    --
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             DASHBOARD
+             ================================================= -->
+
+        <section id="dashboard">
+
+
+            <!-- =================================================
+                 STATISTICS
+                 ================================================= -->
+
+            <section class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ◉
+                    </div>
+
+                    <div>
+
+                        <span class="stat-label">
+                            MODEL STATUS
+                        </span>
+
+                        <strong
+                            id="model-status"
+                            class="stat-value status-good"
+                        >
+                            ENABLED
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ◈
+                    </div>
+
+                    <div>
+
+                        <span class="stat-label">
+                            ACTIVE SESSIONS
+                        </span>
+
+                        <strong
+                            id="active-sessions"
+                            class="stat-value"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon warning">
+                        ⚠
+                    </div>
+
+                    <div>
+
+                        <span class="stat-label">
+                            BLOCKED SOURCES
+                        </span>
+
+                        <strong
+                            id="blocked-sources"
+                            class="stat-value"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon danger">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span class="stat-label">
+                            SUSPICIOUS SESSIONS
+                        </span>
+
+                        <strong
+                            id="suspicious-sessions"
+                            class="stat-value"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 RISK MONITOR
+                 ================================================= -->
+
+            <section class="risk-panel panel">
+
+                <div class="risk-header">
+
+                    <div>
+
+                        <p class="panel-label">
+                            REAL-TIME SECURITY MONITOR
+                        </p>
+
+                        <h3>
+                            Authentication Risk Level
+                        </h3>
+
+                    </div>
+
+
+                    <div class="risk-number-container">
+
+                        <span
+                            id="risk-score"
+                            class="risk-score"
+                        >
+                            0
+                        </span>
+
+                        <span>
+                            /100
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="risk-bar">
+
+                    <div
+                        id="risk-fill"
+                        class="risk-fill risk-safe"
+                        style="width:0%"
+                    ></div>
+
+                </div>
+
+
+                <div class="risk-footer">
+
+                    <span>
+                        Current assessment
+                    </span>
+
+                    <strong id="risk-status">
+                        NO ACTIVE THREAT
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 DETECTION ENGINE
+                 ================================================= -->
+
+            <section
+                id="system"
+                class="panel detection-panel"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="panel-label">
+                            ANALYSIS PIPELINE
+                        </p>
+
+                        <h3>
+                            Detection Engine
+                        </h3>
+
+                    </div>
+
+                    <span class="engine-status">
+                        ACTIVE
+                    </span>
+
+                </div>
+
+
+                <div class="engine-grid">
+
+
+                    <div class="engine-card">
+
+                        <div class="engine-card-top">
+
+                            <span class="engine-icon">
+                                🧠
+                            </span>
+
+                            <span class="engine-active">
+                                ACTIVE
+                            </span>
+
+                        </div>
+
+                        <h4>
+                            ML Anomaly Detection
+                        </h4>
+
+                        <p>
+                            Isolation Forest V2 detects abnormal
+                            authentication behaviour.
+                        </p>
+
+                        <div class="engine-tag">
+                            ISOLATION FOREST V2
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="engine-card">
+
+                        <div class="engine-card-top">
+
+                            <span class="engine-icon">
+                                ⚙
+                            </span>
+
+                            <span class="engine-active">
+                                ACTIVE
+                            </span>
+
+                        </div>
+
+                        <h4>
+                            Rule Detection
+                        </h4>
+
+                        <p>
+                            Evaluates new IP, device, location,
+                            login time and failed attempts.
+                        </p>
+
+                        <div class="engine-tag">
+                            BEHAVIOURAL RULES
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="engine-card">
+
+                        <div class="engine-card-top">
+
+                            <span class="engine-icon">
+                                🔐
+                            </span>
+
+                            <span class="engine-active">
+                                ACTIVE
+                            </span>
+
+                        </div>
+
+                        <h4>
+                            Password Spraying
+                        </h4>
+
+                        <p>
+                            Identifies authentication attacks
+                            targeting multiple accounts.
+                        </p>
+
+                        <div class="engine-tag">
+                            MULTI-ACCOUNT ANALYSIS
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="engine-card">
+
+                        <div class="engine-card-top">
+
+                            <span class="engine-icon">
+                                📱
+                            </span>
+
+                            <span class="engine-active">
+                                ACTIVE
+                            </span>
+
+                        </div>
+
+                        <h4>
+                            Adaptive MFA
+                        </h4>
+
+                        <p>
+                            Escalates authentication when the
+                            calculated risk requires verification.
+                        </p>
+
+                        <div class="engine-tag">
+                            RISK-BASED MFA
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="engine-card">
+
+                        <div class="engine-card-top">
+
+                            <span class="engine-icon">
+                                🔒
+                            </span>
+
+                            <span class="engine-active">
+                                ACTIVE
+                            </span>
+
+                        </div>
+
+                        <h4>
+                            Session Takeover
+                        </h4>
+
+                        <p>
+                            Detects IP, device, user-agent and
+                            location changes in active sessions.
+                        </p>
+
+                        <div class="engine-tag">
+                            SESSION ANOMALY
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="engine-card">
+
+                        <div class="engine-card-top">
+
+                            <span class="engine-icon">
+                                🛡
+                            </span>
+
+                            <span class="engine-active">
+                                ACTIVE
+                            </span>
+
+                        </div>
+
+                        <h4>
+                            Automated Response
+                        </h4>
+
+                        <p>
+                            Supports ALLOW, MONITOR, MFA and BLOCK
+                            response decisions.
+                        </p>
+
+                        <div class="engine-tag">
+                            RESPONSE ENGINE
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 THREAT SIMULATION
+                 ================================================= -->
+
+            <section
+                id="threat-monitor"
+                class="panel simulation-panel"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="panel-label">
+                            DEMONSTRATION CONTROL
+                        </p>
+
+                        <h3>
+                            Live Threat Simulation
+                        </h3>
+
+                    </div>
+
+                    <span class="demo-badge">
+                        DEMO
+                    </span>
+
+                </div>
+
+
+                <p class="simulation-description">
+
+                    Simulate authentication scenarios and observe
+                    CyberGuard's detection, risk scoring,
+                    explanation and automated response.
+
+                </p>
+
+
+                <div class="simulation-buttons">
+
+
+                    <button
+                        class="simulation-btn normal-btn"
+                        onclick="simulateThreat('normal')"
+                    >
+
+                        <span class="simulation-icon">
+                            🟢
+                        </span>
+
+                        <span class="simulation-text">
+
+                            <strong>
+                                Normal Login
+                            </strong>
+
+                            <small>
+                                Expected user behaviour
+                            </small>
+
+                        </span>
+
+                    </button>
+
+
+
+                    <button
+                        class="simulation-btn suspicious-btn"
+                        onclick="simulateThreat('suspicious')"
+                    >
+
+                        <span class="simulation-icon">
+                            🟡
+                        </span>
+
+                        <span class="simulation-text">
+
+                            <strong>
+                                Suspicious Login
+                            </strong>
+
+                            <small>
+                                New IP + device + location
+                            </small>
+
+                        </span>
+
+                    </button>
+
+
+
+                    <button
+                        class="simulation-btn ato-btn"
+                        onclick="simulateThreat('ato')"
+                    >
+
+                        <span class="simulation-icon">
+                            🔴
+                        </span>
+
+                        <span class="simulation-text">
+
+                            <strong>
+                                Account Takeover
+                            </strong>
+
+                            <small>
+                                High-risk authentication attempt
+                            </small>
+
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="simulation-result"
+                    class="simulation-result"
+                >
+
+                    <div class="simulation-message">
+
+                        Select a scenario to begin authentication
+                        analysis.
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 THREAT EVENT LOG
+                 ================================================= -->
+
+            <section
+                class="panel threat-log-panel"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="panel-label">
+                            SECURITY EVENTS
+                        </p>
+
+                        <h3>
+                            Live Threat Event Log
+                        </h3>
+
+                        <p class="panel-description">
+                            Recent authentication events detected
+                            by CyberGuard.
+                        </p>
+
+                    </div>
+
+
+                    <div class="event-controls">
+
+                        <span
+                            id="event-count"
+                            class="event-count"
+                        >
+                            0 EVENTS
+                        </span>
+
+                        <button
+                            class="clear-events-btn"
+                            onclick="clearThreatEvents()"
+                        >
+                            Clear Events
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table class="threat-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>TIME</th>
+
+                                <th>THREAT TYPE</th>
+
+                                <th>USER</th>
+
+                                <th>SOURCE IP</th>
+
+                                <th>RISK</th>
+
+                                <th>SEVERITY</th>
+
+                                <th>DECISION</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="threat-events-body">
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    class="empty-events"
+                                >
+                                    Loading threat events...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     EVENT DETAILS
+                     ================================================= -->
+
+                <div
+                    id="detection-details"
+                    class="detection-details"
+                    style="display:none;"
+                >
+
+
+                    <div class="details-header">
+
+                        <div>
+
+                            <p class="panel-label">
+                                EVENT ANALYSIS
+                            </p>
+
+                            <h3>
+                                Detection Evidence
+                            </h3>
+
+                        </div>
+
+
+                        <span
+                            id="details-event-id"
+                            class="event-id"
+                        >
+                            --
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="details-grid">
+
+
+                        <div class="detail-card">
+
+                            <span>
+                                USER
+                            </span>
+
+                            <strong id="detail-user">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-card">
+
+                            <span>
+                                SOURCE IP
+                            </span>
+
+                            <strong id="detail-ip">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-card">
+
+                            <span>
+                                LOCATION
+                            </span>
+
+                            <strong id="detail-location">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-card">
+
+                            <span>
+                                DEVICE
+                            </span>
+
+                            <strong id="detail-device">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-card">
+
+                            <span>
+                                RISK SCORE
+                            </span>
+
+                            <strong
+                                id="detail-risk"
+                                class="detail-risk"
+                            >
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-card">
+
+                            <span>
+                                DECISION
+                            </span>
+
+                            <strong id="detail-decision">
+                                --
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- DETECTION EVIDENCE -->
+
+                    <div class="analysis-section">
+
+                        <div class="analysis-title">
+
+                            <span class="analysis-number">
+                                01
+                            </span>
+
+                            <h4>
+                                Detection Evidence
+                            </h4>
+
+                        </div>
+
+
+                        <div
+                            id="detection-evidence"
+                            class="evidence-grid"
+                        >
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- AI ANALYSIS -->
+
+                    <div class="analysis-section">
+
+                        <div class="analysis-title">
+
+                            <span class="analysis-number">
+                                02
+                            </span>
+
+                            <h4>
+                                AI Analysis
+                            </h4>
+
+                        </div>
+
+
+                        <div
+                            id="ai-explanation"
+                            class="explanation-box"
+                        >
+                            No event selected.
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- RECOMMENDED RESPONSE -->
+
+                    <div class="analysis-section">
+
+                        <div class="analysis-title">
+
+                            <span class="analysis-number">
+                                03
+                            </span>
+
+                            <h4>
+                                Recommended Response
+                            </h4>
+
+                        </div>
+
+
+                        <div
+                            id="recommended-response"
+                            class="response-list"
+                        >
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 LOWER GRID
+                 ================================================= -->
+
+            <section class="lower-grid">
+
+
+                <!-- SESSION STATISTICS -->
+
+                <div
+                    id="sessions"
+                    class="panel"
+                >
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="panel-label">
+                                SESSION SECURITY
+                            </p>
+
+                            <h3>
+                                Session Statistics
+                            </h3>
+
+                        </div>
+
+                        <span class="refresh-text">
+                            AUTO REFRESH
+                        </span>
+
+                    </div>
+
+
+                    <div class="session-grid">
+
+
+                        <div class="session-stat">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong id="session-total">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="session-stat">
+
+                            <span>
+                                Active
+                            </span>
+
+                            <strong id="session-active">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="session-stat">
+
+                            <span>
+                                Revoked
+                            </span>
+
+                            <strong id="session-revoked">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="session-stat">
+
+                            <span>
+                                Expired
+                            </span>
+
+                            <strong id="session-expired">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="session-stat">
+
+                            <span>
+                                Suspicious
+                            </span>
+
+                            <strong id="session-suspicious">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BLOCKED SOURCES -->
+
+                <div
+                    id="blocked-sources"
+                    class="panel"
+                >
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="panel-label">
+                                NETWORK PROTECTION
+                            </p>
+
+                            <h3>
+                                Blocked Sources
+                            </h3>
+
+                        </div>
+
+                        <span class="refresh-text">
+                            LIVE
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        id="blocked-list"
+                        class="blocked-list"
+                    >
+
+                        <div class="empty-blocked">
+                            No blocked sources.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <footer class="footer">
+
+            <div>
+                CYBERGUARD ATO SENTINEL
+            </div>
+
+            <div>
+                AI-POWERED ACCOUNT TAKEOVER DETECTION
+            </div>
+
+            <div>
+                HACKATHON PROTOTYPE
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   GLOBAL STATE
+   ========================================================= */
+
+let currentThreatEvents = [];
+
+
+
+/* =========================================================
+   CLOCK
+   ========================================================= */
+
+function updateClock() {
+
+    const element =
+        document.getElementById("current-time");
+
+    if (!element) {
+        return;
+    }
+
+    const now = new Date();
+
+    element.textContent =
+        now.toLocaleString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            }
+        );
+}
+
+
+updateClock();
+
+setInterval(
+    updateClock,
+    1000
+);
+
+
+
+/* =========================================================
+   HEALTH
+   ========================================================= */
+
+async function loadHealth() {
+
+    try {
+
+        const response =
+            await fetch("/api/health");
+
+        const data =
+            await response.json();
+
+        const status =
+            String(
+                data.status ?? ""
+            ).toLowerCase();
+
+        const healthy =
+            response.ok &&
+            (
+                status === "healthy" ||
+                status === "online" ||
+                status === "ok"
+            );
+
+        document.getElementById(
+            "api-status"
+        ).textContent =
+            healthy
+                ? "Connected"
+                : "Unavailable";
+
+
+        document.getElementById(
+            "model-status"
+        ).textContent =
+            data.ml_model === "enabled" ||
+            data.ml_detection === "enabled"
+                ? "ENABLED"
+                : "CHECK";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Health error:",
+            error
+        );
+
+        document.getElementById(
+            "api-status"
+        ).textContent =
+            "Disconnected";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   SESSION STATISTICS
+   ========================================================= */
+
+async function loadSessionStatistics() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/session-statistics"
+            );
+
+        const data =
+            await response.json();
+
+        const stats =
+            data.statistics ?? data;
+
+
+        const total =
+            Number(
+                stats.total ??
+                stats.total_sessions ??
+                0
+            );
+
+
+        const active =
+            Number(
+                stats.active ??
+                stats.active_sessions ??
+                0
+            );
+
+
+        const revoked =
+            Number(
+                stats.revoked ??
+                stats.revoked_sessions ??
+                0
+            );
+
+
+        const expired =
+            Number(
+                stats.expired ??
+                stats.expired_sessions ??
+                0
+            );
+
+
+        const suspicious =
+            Number(
+                stats.suspicious ??
+                stats.suspicious_sessions ??
+                0
+            );
+
+
+        document.getElementById(
+            "session-total"
+        ).textContent =
+            total;
+
+
+        document.getElementById(
+            "session-active"
+        ).textContent =
+            active;
+
+
+        document.getElementById(
+            "session-revoked"
+        ).textContent =
+            revoked;
+
+
+        document.getElementById(
+            "session-expired"
+        ).textContent =
+            expired;
+
+
+        document.getElementById(
+            "session-suspicious"
+        ).textContent =
+            suspicious;
+
+
+        document.getElementById(
+            "active-sessions"
+        ).textContent =
+            active;
+
+
+        document.getElementById(
+            "suspicious-sessions"
+        ).textContent =
+            suspicious;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Session statistics error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   BLOCKED IPS
+   ========================================================= */
+
+async function loadBlockedIPs() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/blocked-ips"
+            );
+
+        const data =
+            await response.json();
+
+
+        let blocked =
+            data.blocked_ips ??
+            data.blocked ??
+            data;
+
+
+        if (!Array.isArray(blocked)) {
+            blocked = [];
+        }
+
+
+        document.getElementById(
+            "blocked-sources"
+        ).textContent =
+            blocked.length;
+
+
+        const container =
+            document.getElementById(
+                "blocked-list"
+            );
+
+
+        if (blocked.length === 0) {
+
+            container.innerHTML = `
+                <div class="empty-blocked">
+                    <span>✓</span>
+                    No blocked sources.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML =
+            blocked
+                .map(
+                    item => {
+
+                        const ip =
+                            typeof item === "string"
+                                ? item
+                                : (
+                                    item.ip_address ??
+                                    item.ip ??
+                                    "--"
+                                );
+
+
+                        const reason =
+                            typeof item === "object"
+                                ? (
+                                    item.reason ??
+                                    "Security policy"
+                                )
+                                : "Security policy";
+
+
+                        return `
+                            <div class="blocked-item">
+
+                                <div class="blocked-ip">
+
+                                    <span class="blocked-icon">
+                                        ⛔
+                                    </span>
+
+                                    <div>
+
+                                        <strong>
+                                            ${escapeHtml(ip)}
+                                        </strong>
+
+                                        <small>
+                                            ${escapeHtml(reason)}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                                <span class="blocked-label">
+                                    BLOCKED
+                                </span>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Blocklist error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   RISK DISPLAY
+   ========================================================= */
+
+function setRisk(
+    score,
+    status
+) {
+
+    const safeScore =
+        Math.max(
+            0,
+            Math.min(
+                Number(score) || 0,
+                100
+            )
+        );
+
+
+    document.getElementById(
+        "risk-score"
+    ).textContent =
+        Math.round(
+            safeScore
+        );
+
+
+    document.getElementById(
+        "risk-status"
+    ).textContent =
+        status;
+
+
+    const fill =
+        document.getElementById(
+            "risk-fill"
+        );
+
+
+    fill.style.width =
+        `${safeScore}%`;
+
+
+    fill.classList.remove(
+        "risk-safe",
+        "risk-low",
+        "risk-medium",
+        "risk-high",
+        "risk-critical"
+    );
+
+
+    fill.classList.add(
+        getRiskClass(
+            safeScore,
+            status
+        )
+    );
+
+}
+
+
+
+/* =========================================================
+   REFRESH DASHBOARD
+   ========================================================= */
+
+async function refreshDashboard() {
+
+    await Promise.all([
+        loadHealth(),
+        loadSessionStatistics(),
+        loadBlockedIPs(),
+        loadThreatEvents()
+    ]);
+
+}
+
+
+refreshDashboard();
+
+
+setInterval(
+    refreshDashboard,
+    5000
+);
+
+
+
+/* =========================================================
+   SIMULATE THREAT
+   ========================================================= */
+
+async function simulateThreat(
+    scenario
+) {
+
+    const buttons =
+        document.querySelectorAll(
+            ".simulation-btn"
+        );
+
+
+    const resultBox =
+        document.getElementById(
+            "simulation-result"
+        );
+
+
+    buttons.forEach(
+        button => {
+            button.disabled = true;
+        }
+    );
+
+
+    resultBox.innerHTML = `
+        <div class="simulation-loading">
+
+            <div class="spinner"></div>
+
+            <span>
+                Analyzing authentication behavior...
+            </span>
+
+        </div>
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/simulate",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        scenario: scenario
+                    })
+                }
+            );
+
+
+        const raw =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                raw.error ??
+                raw.detail ??
+                "Simulation request failed"
+            );
+
+        }
+
+
+        const data =
+            raw.result ??
+            raw.data ??
+            raw;
+
+
+        const risk =
+            Number(
+                data.risk_score ??
+                data.final_risk_score ??
+                data.risk ??
+                data.score ??
+                0
+            );
+
+
+        const severity =
+            data.severity ??
+            "UNKNOWN";
+
+
+        const decision =
+            data.decision ??
+            data.action ??
+            "UNKNOWN";
+
+
+        let scenarioLabel =
+            "AUTHENTICATION";
+
+
+        let scenarioClass =
+            "scenario-normal";
+
+
+        if (scenario === "normal") {
+
+            scenarioLabel =
+                "NORMAL LOGIN";
+
+            scenarioClass =
+                "scenario-normal";
+
+        }
+
+        else if (scenario === "suspicious") {
+
+            scenarioLabel =
+                "SUSPICIOUS LOGIN";
+
+            scenarioClass =
+                "scenario-suspicious";
+
+        }
+
+        else if (scenario === "ato") {
+
+            scenarioLabel =
+                "ACCOUNT TAKEOVER";
+
+            scenarioClass =
+                "scenario-attack";
+
+        }
+
+
+        let status =
+            "NO ACTIVE THREAT";
+
+
+        if (risk > 80) {
+
+            status =
+                "CRITICAL THREAT";
+
+        }
+
+        else if (risk > 60) {
+
+            status =
+                "HIGH RISK DETECTED";
+
+        }
+
+        else if (risk > 40) {
+
+            status =
+                "SUSPICIOUS ACTIVITY";
+
+        }
+
+        else if (risk > 20) {
+
+            status =
+                "LOW RISK ACTIVITY";
+
+        }
+
+
+        setRisk(
+            risk,
+            status
+        );
+
+
+        resultBox.innerHTML = `
+
+            <div class="simulation-result-content">
+
+
+                <div class="result-block">
+
+                    <span>
+                        SCENARIO
+                    </span>
+
+                    <strong
+                        class="${scenarioClass}"
+                    >
+                        ${scenarioLabel}
+                    </strong>
+
+                </div>
+
+
+                <div class="result-block">
+
+                    <span>
+                        RISK SCORE
+                    </span>
+
+                    <strong class="result-risk">
+                        ${Math.round(risk)}
+                    </strong>
+
+                </div>
+
+
+                <div class="result-block">
+
+                    <span>
+                        SEVERITY
+                    </span>
+
+                    <strong>
+                        ${escapeHtml(severity)}
+                    </strong>
+
+                </div>
+
+
+                <div class="result-block">
+
+                    <span>
+                        DECISION
+                    </span>
+
+                    <strong>
+                        ${escapeHtml(decision)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        await Promise.all([
+            loadSessionStatistics(),
+            loadBlockedIPs(),
+            loadThreatEvents()
+        ]);
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Threat simulation error:",
+            error
+        );
+
+
+        resultBox.innerHTML = `
+
+            <div class="simulation-error">
+
+                ⚠
+                Simulation failed:
+                ${escapeHtml(error.message)}
+
+            </div>
+
+        `;
+
+    }
+
+    finally {
+
+        buttons.forEach(
+            button => {
+                button.disabled = false;
+            }
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   LOAD THREAT EVENTS
+   ========================================================= */
+
+async function loadThreatEvents() {
+
+    const body =
+        document.getElementById(
+            "threat-events-body"
+        );
+
+
+    const count =
+        document.getElementById(
+            "event-count"
+        );
+
+
+    if (!body) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/threat-events"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        const events =
+            Array.isArray(data.events)
+                ? data.events
+                : [];
+
+
+        currentThreatEvents =
+            events;
+
+
+        count.textContent =
+            `${events.length} EVENTS`;
+
+
+        if (events.length === 0) {
+
+            body.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="empty-events"
+                    >
+                        No threat events recorded.
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        body.innerHTML =
+            events
+                .map(
+                    (
+                        event,
+                        index
+                    ) =>
+                        createThreatRow(
+                            event,
+                            index
+                        )
+                )
+                .join("");
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Threat event log error:",
+            error
+        );
+
+
+        body.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    class="empty-events"
+                >
+                    Unable to load threat events.
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   CREATE THREAT ROW
+   ========================================================= */
+
+function createThreatRow(
+    event,
+    index
+) {
+
+    const risk =
+        Number(
+            event.risk_score ?? 0
+        );
+
+
+    const severity =
+        event.severity ??
+        "UNKNOWN";
+
+
+    const decision =
+        event.decision ??
+        "UNKNOWN";
+
+
+    const username =
+        event.username ??
+        "--";
+
+
+    const ip =
+        event.ip_address ??
+        "--";
+
+
+    const threatType =
+        event.threat_type ??
+        event.scenario ??
+        "authentication";
+
+
+    let threatLabel =
+        "NORMAL LOGIN";
+
+
+    let threatClass =
+        "normal";
+
+
+    if (
+        threatType === "account_takeover" ||
+        event.scenario === "ato"
+    ) {
+
+        threatLabel =
+            "ACCOUNT TAKEOVER";
+
+        threatClass =
+            "attack";
+
+    }
+
+    else if (
+        threatType === "suspicious_authentication" ||
+        event.scenario === "suspicious"
+    ) {
+
+        threatLabel =
+            "SUSPICIOUS LOGIN";
+
+        threatClass =
+            "suspicious";
+
+    }
+
+
+    const riskClass =
+        getRiskClass(
+            risk,
+            severity
+        );
+
+
+    const decisionClass =
+        getDecisionClass(
+            decision
+        );
+
+
+    const time =
+        formatEventTime(
+            event.timestamp
+        );
+
+
+    return `
+
+        <tr
+            class="threat-row"
+            onclick="showThreatEvent(${index})"
+        >
+
+            <td>
+                ${escapeHtml(time)}
+            </td>
+
+
+            <td>
+
+                <span
+                    class="event-threat ${threatClass}"
+                >
+                    ${escapeHtml(threatLabel)}
+                </span>
+
+            </td>
+
+
+            <td>
+                ${escapeHtml(username)}
+            </td>
+
+
+            <td class="ip-cell">
+                ${escapeHtml(ip)}
+            </td>
+
+
+            <td>
+
+                <span
+                    class="risk-number ${riskClass}"
+                >
+                    ${Math.round(risk)}
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span
+                    class="severity-text ${riskClass}"
+                >
+                    ${escapeHtml(severity)}
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span
+                    class="decision-badge ${decisionClass}"
+                >
+                    ${escapeHtml(decision)}
+                </span>
+
+            </td>
+
+        </tr>
+
+    `;
+
+}
+
+
+
+/* =========================================================
+   SHOW THREAT EVENT
+   ========================================================= */
+
+async function showThreatEvent(
+    index
+) {
+
+    if (!currentThreatEvents.length) {
+
+        await loadThreatEvents();
+
+    }
+
+
+    const event =
+        currentThreatEvents[index];
+
+
+    if (!event) {
+        return;
+    }
+
+
+    const details =
+        document.getElementById(
+            "detection-details"
+        );
+
+
+    details.style.display =
+        "block";
+
+
+    document.getElementById(
+        "details-event-id"
+    ).textContent =
+        event.event_id ??
+        "--";
+
+
+    document.getElementById(
+        "detail-user"
+    ).textContent =
+        event.username ??
+        "--";
+
+
+    document.getElementById(
+        "detail-ip"
+    ).textContent =
+        event.ip_address ??
+        "--";
+
+
+    document.getElementById(
+        "detail-location"
+    ).textContent =
+        event.location ??
+        "--";
+
+
+    document.getElementById(
+        "detail-device"
+    ).textContent =
+        event.device_id ??
+        "--";
+
+
+    const risk =
+        Number(
+            event.risk_score ??
+            0
+        );
+
+
+    document.getElementById(
+        "detail-risk"
+    ).textContent =
+        Math.round(risk);
+
+
+    document.getElementById(
+        "detail-decision"
+    ).textContent =
+        event.decision ??
+        "--";
+
+
+    renderDetectionEvidence(
+        event
+    );
+
+
+    document.getElementById(
+        "ai-explanation"
+    ).textContent =
+        event.explanation ??
+        "No explanation available.";
+
+
+    renderRecommendedResponse(
+        event.recommended_actions
+    );
+
+
+    details.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+
+}
+
+
+
+/* =========================================================
+   DETECTION EVIDENCE
+   ========================================================= */
+
+function renderDetectionEvidence(
+    event
+) {
+
+    const container =
+        document.getElementById(
+            "detection-evidence"
+        );
+
+
+    const ml =
+        event.ml_detection ??
+        {};
+
+
+    const rule =
+        event.rule_detection ??
+        {};
+
+
+    const spraying =
+        event.password_spraying ??
+        {};
+
+
+    const session =
+        event.session ??
+        {};
+
+
+    const mlDetected =
+        ml.anomalous === true;
+
+
+    const mlRisk =
+        Number(
+            ml.ml_risk_score ??
+            0
+        );
+
+
+    const ruleScore =
+        Number(
+            rule.rule_score ??
+            rule.rule_risk_score ??
+            0
+        );
+
+
+    const sprayingDetected =
+        spraying.spraying_detected === true;
+
+
+    const targetedUsers =
+        Number(
+            spraying.targeted_users ??
+            0
+        );
+
+
+    const sessionStatus =
+        session.status ??
+        "not evaluated";
+
+
+    const sessionAnomaly =
+        session.anomaly_detected === true ||
+        session.anomalous === true ||
+        sessionStatus === "revoked";
+
+
+    container.innerHTML = `
+
+
+        <div
+            class="evidence-card ${
+                mlDetected
+                    ? "evidence-positive"
+                    : "evidence-negative"
+            }"
+        >
+
+            <div class="evidence-icon">
+                🧠
+            </div>
+
+            <div>
+
+                <span class="evidence-title">
+                    ML ANOMALY
+                </span>
+
+                <strong class="evidence-value">
+                    ${
+                        mlDetected
+                            ? "ANOMALOUS"
+                            : "NORMAL"
+                    }
+                </strong>
+
+                <small>
+                    ML Risk: ${mlRisk}
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            class="evidence-card ${
+                ruleScore > 0
+                    ? "evidence-positive"
+                    : "evidence-negative"
+            }"
+        >
+
+            <div class="evidence-icon">
+                ⚙
+            </div>
+
+            <div>
+
+                <span class="evidence-title">
+                    RULE ENGINE
+                </span>
+
+                <strong class="evidence-value">
+                    ${
+                        ruleScore > 0
+                            ? "TRIGGERED"
+                            : "NORMAL"
+                    }
+                </strong>
+
+                <small>
+                    Rule Risk: ${ruleScore}
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            class="evidence-card ${
+                sprayingDetected
+                    ? "evidence-positive"
+                    : "evidence-negative"
+            }"
+        >
+
+            <div class="evidence-icon">
+                🔐
+            </div>
+
+            <div>
+
+                <span class="evidence-title">
+                    PASSWORD SPRAYING
+                </span>
+
+                <strong class="evidence-value">
+                    ${
+                        sprayingDetected
+                            ? "DETECTED"
+                            : "NOT DETECTED"
+                    }
+                </strong>
+
+                <small>
+                    Targeted Users: ${targetedUsers}
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            class="evidence-card ${
+                sessionAnomaly
+                    ? "evidence-positive"
+                    : "evidence-negative"
+            }"
+        >
+
+            <div class="evidence-icon">
+                🔒
+            </div>
+
+            <div>
+
+                <span class="evidence-title">
+                    SESSION SECURITY
+                </span>
+
+                <strong class="evidence-value">
+                    ${
+                        sessionAnomaly
+                            ? "ANOMALY DETECTED"
+                            : "NORMAL"
+                    }
+                </strong>
+
+                <small>
+                    Status:
+                    ${escapeHtml(sessionStatus)}
+                </small>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =========================================================
+   RECOMMENDED RESPONSE
+   ========================================================= */
+
+function renderRecommendedResponse(
+    actions
+) {
+
+    const container =
+        document.getElementById(
+            "recommended-response"
+        );
+
+
+    if (
+        !Array.isArray(actions) ||
+        actions.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="response-item">
+
+                <span class="response-icon">
+                    ✓
+                </span>
+
+                <span>
+                    No additional automated response
+                    recommended.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        actions
+            .map(
+                action => `
+
+                    <div class="response-item">
+
+                        <span class="response-icon">
+                            →
+                        </span>
+
+                        <span>
+                            ${escapeHtml(
+                                String(action)
+                            )}
+                        </span>
+
+                    </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+
+/* =========================================================
+   RISK CLASS
+   ========================================================= */
+
+function getRiskClass(
+    risk,
+    severity
+) {
+
+    const value =
+        String(
+            severity
+        ).toLowerCase();
+
+
+    if (
+        value === "critical" ||
+        risk > 80
+    ) {
+        return "risk-critical";
+    }
+
+
+    if (
+        value === "high" ||
+        risk > 60
+    ) {
+        return "risk-high";
+    }
+
+
+    if (
+        value === "medium" ||
+        risk > 40
+    ) {
+        return "risk-medium";
+    }
+
+
+    if (
+        value === "low" ||
+        risk > 20
+    ) {
+        return "risk-low";
+    }
+
+
+    return "risk-safe";
+
+}
+
+
+
+/* =========================================================
+   DECISION CLASS
+   ========================================================= */
+
+function getDecisionClass(
+    decision
+) {
+
+    switch (
+        String(
+            decision
+        ).toUpperCase()
+    ) {
+
+        case "ALLOW":
+            return "decision-allow";
+
+        case "MONITOR":
+            return "decision-monitor";
+
+        case "MFA_REQUIRED":
+            return "decision-mfa";
+
+        case "BLOCK":
+            return "decision-block";
+
+        default:
+            return "decision-monitor";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   FORMAT EVENT TIME
+   ========================================================= */
+
+function formatEventTime(
+    timestamp
+) {
+
+    if (!timestamp) {
+        return "--";
+    }
+
+
+    try {
+
+        return new Date(
+            timestamp
+        ).toLocaleString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            }
+        );
+
+    }
+
+    catch {
+
+        return String(
+            timestamp
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   CLEAR EVENTS
+   ========================================================= */
+
+async function clearThreatEvents() {
+
+    const confirmed =
+        confirm(
+            "Clear all recorded threat events?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/threat-events/clear",
+                {
+                    method: "POST"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to clear threat events"
+            );
+
+        }
+
+
+        currentThreatEvents = [];
+
+
+        document.getElementById(
+            "detection-details"
+        ).style.display =
+            "none";
+
+
+        await loadThreatEvents();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Clear events error:",
+            error
+        );
+
+
+        alert(
+            "Unable to clear threat events."
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   HTML ESCAPE
+   ========================================================= */
+
+function escapeHtml(
+    value
+) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+/* =========================================================
+   INITIAL STATE
+   ========================================================= */
+
+setRisk(
+    0,
+    "NO ACTIVE THREAT"
+);
+
+</script>
+
+
+</body>
+
+</html>

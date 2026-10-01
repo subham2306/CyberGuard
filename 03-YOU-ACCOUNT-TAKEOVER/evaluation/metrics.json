@@ -1,0 +1,21 @@
+{
+    "model": "Isolation Forest",
+    "dataset": "ato_evaluation_data.csv",
+    "total_samples": 2000,
+    "normal_samples": 1000,
+    "ato_samples": 1000,
+    "accuracy": 0.6875,
+    "precision": 0.6154,
+    "recall": 1.0,
+    "f1_score": 0.7619,
+    "confusion_matrix": [
+        [
+            375,
+            625
+        ],
+        [
+            0,
+            1000
+        ]
+    ]
+}

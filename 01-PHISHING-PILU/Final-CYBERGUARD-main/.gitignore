@@ -1,0 +1,77 @@
+# ==============================================================================
+# CYBERGUARD — GITHUB IGNORE RULES
+# ==============================================================================
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Python Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing & Type Checking Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Environment Variables & Secrets (Keep .env.example tracked)
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.cert
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# IDE & Editor Configurations
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Logs & Temporary Files
+*.log
+*.tmp
+tmp/
+temp/
+logs/
+
+# Frontend & Package Manager Artifacts
+node_modules/
+dist/
+build/
+.cache/
+.vite/
+.npm/
+
+# Browser & Test Automation Artifacts
+test-results/
+playwright-report/
+.playwright/
+
+# Large Datasets Exceeding GitHub's 100MB Limit
+# (Original training data can be regenerated using create_clean_datasets.py)
+unified_messages_clean.csv

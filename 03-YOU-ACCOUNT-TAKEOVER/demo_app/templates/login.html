@@ -1,0 +1,2262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CyberGuard Secure Login</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 30px 0;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #102332 0%,
+                    #061019 45%,
+                    #02070c 100%
+                );
+
+            color: white;
+        }
+
+
+        .container {
+
+            width: 520px;
+
+            max-width: 94%;
+
+            background: #0b1621;
+
+            border: 1px solid #294254;
+
+            border-radius: 18px;
+
+            padding: 40px;
+
+            box-shadow:
+                0 0 45px
+                rgba(0, 0, 0, 0.5);
+        }
+
+
+        .logo {
+
+            width: 68px;
+
+            height: 68px;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #102b3a;
+
+            border-radius: 16px;
+
+            font-size: 34px;
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            font-size: 30px;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #7fa9c4;
+
+            margin-bottom: 22px;
+        }
+
+
+        .security-status {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #20e5ad;
+
+            font-size: 13px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .dot {
+
+            width: 9px;
+
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #20e5ad;
+
+            box-shadow:
+                0 0 10px #20e5ad;
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #b9d0df;
+
+            font-size: 14px;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 14px;
+
+            margin-bottom: 18px;
+
+            background: #07121b;
+
+            border: 1px solid #294254;
+
+            border-radius: 10px;
+
+            color: white;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+
+        input:focus {
+
+            border-color: #18d19f;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(24, 209, 159, 0.12);
+        }
+
+
+        button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #18c99a;
+
+            color: #03110d;
+
+            font-weight: bold;
+
+            font-size: 15px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        button:hover {
+
+            background: #25e3b0;
+
+            transform: translateY(-1px);
+        }
+
+
+        button:disabled {
+
+            opacity: 0.55;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+        .loader {
+
+            display: none;
+
+            text-align: center;
+
+            color: #7fa9c4;
+
+            margin-top: 15px;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           RESULT
+           ===================================================== */
+
+        .result {
+
+            display: none;
+
+            margin-top: 22px;
+
+            padding: 20px;
+
+            background: #07121b;
+
+            border: 1px solid #294254;
+
+            border-radius: 10px;
+        }
+
+
+        .result-title {
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            margin-bottom: 12px;
+        }
+
+
+        .row {
+
+            color: #a9bfcc;
+
+            font-size: 14px;
+
+            margin: 7px 0;
+
+            line-height: 1.5;
+        }
+
+
+        .risk {
+
+            margin-top: 14px;
+
+            font-size: 25px;
+
+            font-weight: bold;
+        }
+
+
+        .success {
+
+            color: #25e6ad;
+        }
+
+
+        .warning {
+
+            color: #ffc857;
+        }
+
+
+        .danger {
+
+            color: #ff5c70;
+        }
+
+
+        /* =====================================================
+           MFA
+           ===================================================== */
+
+        .mfa {
+
+            display: none;
+
+            margin-top: 22px;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            border: 1px solid #665b28;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #191807,
+                    #0b1116
+                );
+        }
+
+
+        .mfa-title {
+
+            color: #ffd75e;
+
+            font-size: 21px;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+        }
+
+
+        .mfa-description {
+
+            color: #aebbc4;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin-bottom: 18px;
+        }
+
+
+        .otp-display {
+
+            padding: 15px;
+
+            margin-bottom: 18px;
+
+            text-align: center;
+
+            background: #101b23;
+
+            border: 1px dashed #ffd75e;
+
+            border-radius: 9px;
+
+            color: #ffd75e;
+
+            font-size: 24px;
+
+            font-weight: bold;
+
+            letter-spacing: 6px;
+        }
+
+
+        .back-button {
+
+            margin-top: 10px;
+
+            background: transparent;
+
+            border: 1px solid #294254;
+
+            color: #8da8b8;
+        }
+
+
+        .back-button:hover {
+
+            background: #101d27;
+
+            color: white;
+        }
+
+
+        /* =====================================================
+           SUCCESS SESSION
+           ===================================================== */
+
+        .success-box {
+
+            display: none;
+
+            margin-top: 22px;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            border: 1px solid #1c705d;
+
+            background: #071a16;
+        }
+
+
+        .success-title {
+
+            color: #25e6ad;
+
+            font-size: 21px;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+        }
+
+
+        .session-id {
+
+            margin-top: 12px;
+
+            padding: 10px;
+
+            background: #0b2821;
+
+            border-radius: 7px;
+
+            color: #8ee9d1;
+
+            font-size: 12px;
+
+            word-break: break-all;
+        }
+
+
+        /* =====================================================
+           SESSION PROTECTION
+           ===================================================== */
+
+        .session-protection {
+
+            display: none;
+
+            margin-top: 22px;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            border: 1px solid #24506a;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #091a27,
+                    #071119
+                );
+        }
+
+
+        .protection-title {
+
+            color: #53c7ff;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+
+        .monitoring-status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-bottom: 18px;
+
+            color: #25e6ad;
+
+            font-size: 14px;
+        }
+
+
+        .monitor-dot {
+
+            width: 9px;
+
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #25e6ad;
+
+            box-shadow:
+                0 0 9px #25e6ad;
+        }
+
+
+        .monitor-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .monitor-item {
+
+            padding: 11px;
+
+            background: #0c202d;
+
+            border: 1px solid #1d3c4e;
+
+            border-radius: 8px;
+
+            color: #a9c6d6;
+
+            font-size: 13px;
+        }
+
+
+        .monitor-item span {
+
+            color: #25e6ad;
+
+            margin-right: 5px;
+        }
+
+
+        .takeover-button {
+
+            background: #d84d62;
+
+            color: white;
+        }
+
+
+        .takeover-button:hover {
+
+            background: #ef5d72;
+        }
+
+
+        /* =====================================================
+           TAKEOVER RESULT
+           ===================================================== */
+
+        .takeover-result {
+
+            display: none;
+
+            margin-top: 22px;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            border: 1px solid #8b3040;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #250d13,
+                    #10090c
+                );
+        }
+
+
+        .takeover-title {
+
+            color: #ff6477;
+
+            font-size: 21px;
+
+            font-weight: bold;
+
+            margin-bottom: 12px;
+        }
+
+
+        .attack-risk {
+
+            color: #ff6477;
+
+            font-size: 27px;
+
+            font-weight: bold;
+
+            margin: 12px 0;
+        }
+
+
+        .detection-list {
+
+            margin-top: 12px;
+
+            padding: 14px;
+
+            background: #190b0f;
+
+            border-radius: 8px;
+        }
+
+
+        .detection-item {
+
+            color: #ffb2bc;
+
+            font-size: 13px;
+
+            margin: 8px 0;
+        }
+
+
+        .revoked {
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            background: #321017;
+
+            color: #ff8b9a;
+
+            font-weight: bold;
+
+            text-align: center;
+        }
+
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 28px;
+
+            color: #527087;
+
+            font-size: 12px;
+        }
+
+
+        @media (max-width: 600px) {
+
+            .container {
+
+                padding: 28px 22px;
+
+            }
+
+            .monitor-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="logo">
+        🛡️
+    </div>
+
+
+    <h1>
+        CYBERGUARD
+    </h1>
+
+
+    <div class="subtitle">
+        Secure Account Access
+    </div>
+
+
+    <div class="security-status">
+
+        <span class="dot"></span>
+
+        CyberGuard ATO Protection Active
+
+    </div>
+
+
+    <!-- =====================================================
+         LOGIN SECTION
+         ===================================================== -->
+
+    <div id="loginSection">
+
+        <form id="loginForm">
+
+
+            <label for="username">
+                Username
+            </label>
+
+
+            <input
+                type="text"
+                id="username"
+                value="alice"
+                placeholder="Enter username"
+                required
+            >
+
+
+            <label for="password">
+                Password
+            </label>
+
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter password"
+                required
+            >
+
+
+            <button
+                type="submit"
+                id="loginButton"
+            >
+                LOGIN SECURELY
+            </button>
+
+
+        </form>
+
+
+        <div
+            class="loader"
+            id="loginLoader"
+        >
+
+            CyberGuard is analyzing
+            authentication behavior...
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         LOGIN RESULT
+         ===================================================== -->
+
+    <div
+        class="result"
+        id="resultBox"
+    >
+
+        <div
+            class="result-title"
+            id="resultTitle"
+        ></div>
+
+
+        <div
+            class="row"
+            id="severity"
+        ></div>
+
+
+        <div
+            class="row"
+            id="decision"
+        ></div>
+
+
+        <div
+            class="row"
+            id="indicators"
+        ></div>
+
+
+        <div
+            class="risk"
+            id="risk"
+        ></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MFA SECTION
+         ===================================================== -->
+
+    <div
+        class="mfa"
+        id="mfaBox"
+    >
+
+
+        <div class="mfa-title">
+
+            🔐 Additional Verification Required
+
+        </div>
+
+
+        <div class="mfa-description">
+
+            CyberGuard detected elevated
+            authentication risk.
+
+            Complete MFA verification to
+            continue securely.
+
+        </div>
+
+
+        <div
+            class="otp-display"
+            id="otpDisplay"
+        >
+            ------
+        </div>
+
+
+        <label for="otpInput">
+
+            Enter Verification Code
+
+        </label>
+
+
+        <input
+            type="text"
+            id="otpInput"
+            maxlength="6"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            placeholder="Enter 6-digit OTP"
+        >
+
+
+        <button
+            id="verifyButton"
+            onclick="verifyMFA()"
+        >
+            VERIFY MFA
+        </button>
+
+
+        <button
+            class="back-button"
+            onclick="backToLogin()"
+        >
+            BACK TO LOGIN
+        </button>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         AUTHENTICATION SUCCESS
+         ===================================================== -->
+
+    <div
+        class="success-box"
+        id="successBox"
+    >
+
+
+        <div class="success-title">
+
+            ✓ Authentication Successful
+
+        </div>
+
+
+        <div class="row">
+
+            Your identity has been verified.
+
+        </div>
+
+
+        <div class="row">
+
+            CyberGuard created an authenticated
+            session.
+
+        </div>
+
+
+        <div
+            class="session-id"
+            id="sessionId"
+        ></div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         SESSION PROTECTION
+         ===================================================== -->
+
+    <div
+        class="session-protection"
+        id="sessionProtection"
+    >
+
+
+        <div class="protection-title">
+
+            🛡️ Session Protection
+
+        </div>
+
+
+        <div class="monitoring-status">
+
+            <span class="monitor-dot"></span>
+
+            Session Monitoring: ACTIVE
+
+        </div>
+
+
+        <div class="monitor-grid">
+
+
+            <div class="monitor-item">
+
+                <span>✓</span>
+
+                IP Monitoring
+
+            </div>
+
+
+            <div class="monitor-item">
+
+                <span>✓</span>
+
+                Device Monitoring
+
+            </div>
+
+
+            <div class="monitor-item">
+
+                <span>✓</span>
+
+                Browser Monitoring
+
+            </div>
+
+
+            <div class="monitor-item">
+
+                <span>✓</span>
+
+                Location Monitoring
+
+            </div>
+
+
+        </div>
+
+
+        <button
+            class="takeover-button"
+            id="takeoverButton"
+            onclick="simulateSessionTakeover()"
+        >
+
+            ⚠ SIMULATE SESSION TAKEOVER
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         TAKEOVER RESULT
+         ===================================================== -->
+
+    <div
+        class="takeover-result"
+        id="takeoverResult"
+    >
+
+
+        <div class="takeover-title">
+
+            ⚠ SESSION TAKEOVER DETECTED
+
+        </div>
+
+
+        <div
+            class="row"
+            id="takeoverDecision"
+        ></div>
+
+
+        <div
+            class="row"
+            id="takeoverSeverity"
+        ></div>
+
+
+        <div
+            class="attack-risk"
+            id="takeoverRisk"
+        ></div>
+
+
+        <div class="detection-list">
+
+
+            <div
+                class="detection-item"
+                id="ipDetection"
+            >
+                ✓ IP change detection
+            </div>
+
+
+            <div
+                class="detection-item"
+                id="deviceDetection"
+            >
+                ✓ Device change detection
+            </div>
+
+
+            <div
+                class="detection-item"
+                id="browserDetection"
+            >
+                ✓ Browser/User-Agent change detection
+            </div>
+
+
+            <div
+                class="detection-item"
+                id="locationDetection"
+            >
+                ✓ Location change detection
+            </div>
+
+
+        </div>
+
+
+        <div class="revoked">
+
+            ✓ Session automatically revoked
+
+            <br>
+
+            ✓ Current request rejected
+
+            <br>
+
+            ✓ Re-authentication required
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer">
+
+        Protected by CyberGuard ATO Detection Engine
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+// ==========================================================
+// GLOBAL STATE
+// ==========================================================
+
+let currentChallengeId = null;
+
+let currentSessionId = null;
+
+
+// ==========================================================
+// LOGIN
+// ==========================================================
+
+document
+    .getElementById("loginForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const username =
+                document
+                    .getElementById("username")
+                    .value
+                    .trim();
+
+
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
+
+
+            const loginButton =
+                document
+                    .getElementById("loginButton");
+
+
+            const loader =
+                document
+                    .getElementById("loginLoader");
+
+
+            loginButton.disabled = true;
+
+            loader.style.display = "block";
+
+
+            hideMFA();
+
+            hideSuccess();
+
+            hideSessionProtection();
+
+            hideTakeoverResult();
+
+            clearResult();
+
+
+            /*
+             * Hackathon demonstration context.
+             *
+             * These controlled values simulate a
+             * suspicious authentication environment.
+             *
+             * In production, security context should
+             * be derived/trusted by the server.
+             */
+
+            const payload = {
+
+                username: username,
+
+                password: password,
+
+                ip_address:
+                    "198.51.100.25",
+
+                location:
+                    "Delhi",
+
+                device_id:
+                    "NEW-DEVICE-001",
+
+                user_agent:
+                    "Unknown-Attacker-Agent"
+
+            };
+
+
+            try {
+
+
+                const response =
+                    await fetch(
+                        "/api/login",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify(payload)
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "CyberGuard Login Response:",
+                    data
+                );
+
+
+                displayLoginResult(data);
+
+
+                // ==========================================
+                // MFA REQUIRED
+                // ==========================================
+
+                if (
+                    data.decision ===
+                    "MFA_REQUIRED"
+                ) {
+
+
+                    currentChallengeId =
+                        data.mfa &&
+                        data.mfa.challenge_id;
+
+
+                    const demoOTP =
+                        data.mfa &&
+                        data.mfa.demo_otp;
+
+
+                    if (
+                        currentChallengeId &&
+                        demoOTP
+                    ) {
+
+
+                        document
+                            .getElementById(
+                                "otpDisplay"
+                            )
+                            .textContent =
+                            demoOTP;
+
+
+                        document
+                            .getElementById(
+                                "mfaBox"
+                            )
+                            .style.display =
+                            "block";
+
+
+                        document
+                            .getElementById(
+                                "otpInput"
+                            )
+                            .focus();
+
+                    }
+
+                }
+
+
+                // ==========================================
+                // DIRECT ALLOW
+                // ==========================================
+
+                else if (
+                    data.decision ===
+                    "ALLOW"
+                ) {
+
+
+                    handleAuthenticatedSession(
+                        data
+                    );
+
+                }
+
+
+            }
+
+
+            catch(error) {
+
+
+                console.error(error);
+
+
+                showError(
+                    "Unable to connect to CyberGuard."
+                );
+
+
+            }
+
+
+            finally {
+
+
+                loginButton.disabled = false;
+
+                loader.style.display = "none";
+
+            }
+
+        }
+    );
+
+
+// ==========================================================
+// DISPLAY LOGIN RESULT
+// ==========================================================
+
+function displayLoginResult(data) {
+
+
+    const resultBox =
+        document
+            .getElementById(
+                "resultBox"
+            );
+
+
+    const resultTitle =
+        document
+            .getElementById(
+                "resultTitle"
+            );
+
+
+    const severity =
+        document
+            .getElementById(
+                "severity"
+            );
+
+
+    const decision =
+        document
+            .getElementById(
+                "decision"
+            );
+
+
+    const indicators =
+        document
+            .getElementById(
+                "indicators"
+            );
+
+
+    const risk =
+        document
+            .getElementById(
+                "risk"
+            );
+
+
+    resultBox.style.display =
+        "block";
+
+
+    const decisionValue =
+        data.decision ||
+        "UNKNOWN";
+
+
+    if (
+        decisionValue ===
+        "ALLOW"
+    ) {
+
+
+        resultTitle.textContent =
+            "✓ Login Approved";
+
+
+        resultTitle.className =
+            "result-title success";
+
+
+        risk.className =
+            "risk success";
+
+    }
+
+
+    else if (
+        decisionValue ===
+        "MFA_REQUIRED"
+    ) {
+
+
+        resultTitle.textContent =
+            "⚠ Additional Verification Required";
+
+
+        resultTitle.className =
+            "result-title warning";
+
+
+        risk.className =
+            "risk warning";
+
+    }
+
+
+    else if (
+        decisionValue ===
+        "BLOCK"
+    ) {
+
+
+        resultTitle.textContent =
+            "✕ Login Blocked";
+
+
+        resultTitle.className =
+            "result-title danger";
+
+
+        risk.className =
+            "risk danger";
+
+    }
+
+
+    else {
+
+
+        resultTitle.textContent =
+            "Authentication Result";
+
+
+        resultTitle.className =
+            "result-title";
+
+    }
+
+
+    severity.textContent =
+        "Severity: " +
+        (
+            data.severity ||
+            "Unknown"
+        );
+
+
+    decision.textContent =
+        "Decision: " +
+        decisionValue;
+
+
+    const list =
+        data.indicators ||
+        [];
+
+
+    indicators.textContent =
+        list.length > 0
+
+        ?
+
+        "Indicators: " +
+        list.join(", ")
+
+        :
+
+        "Indicators: None";
+
+
+    risk.textContent =
+        "Risk Score: " +
+        (
+            data.risk_score ??
+            0
+        ) +
+        "/100";
+
+}
+
+
+// ==========================================================
+// MFA VERIFY
+// ==========================================================
+
+async function verifyMFA() {
+
+
+    const otp =
+        document
+            .getElementById(
+                "otpInput"
+            )
+            .value
+            .trim();
+
+
+    const verifyButton =
+        document
+            .getElementById(
+                "verifyButton"
+            );
+
+
+    if (!currentChallengeId) {
+
+
+        showError(
+            "No active MFA challenge."
+        );
+
+
+        return;
+
+    }
+
+
+    if (!/^\d{6}$/.test(otp)) {
+
+
+        alert(
+            "Please enter the 6-digit OTP."
+        );
+
+
+        return;
+
+    }
+
+
+    verifyButton.disabled = true;
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/mfa/verify",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            challenge_id:
+                                currentChallengeId,
+
+                            otp:
+                                otp
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "MFA Response:",
+            data
+        );
+
+
+        if (
+            data.mfa &&
+            data.mfa.verified === true &&
+            data.decision === "ALLOW"
+        ) {
+
+
+            currentChallengeId =
+                null;
+
+
+            document
+                .getElementById(
+                    "mfaBox"
+                )
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById(
+                    "resultBox"
+                )
+                .style.display =
+                "none";
+
+
+            handleAuthenticatedSession(
+                data
+            );
+
+
+        }
+
+
+        else {
+
+
+            displayLoginResult({
+
+                decision:
+                    data.decision ||
+                    "BLOCK",
+
+                severity:
+                    data.severity ||
+                    "High",
+
+                risk_score:
+                    data.risk_score ||
+                    0,
+
+                indicators: [
+
+                    data.reason ||
+                    "MFA verification failed"
+
+                ]
+
+            });
+
+
+            alert(
+                "MFA verification failed."
+            );
+
+        }
+
+
+    }
+
+
+    catch(error) {
+
+
+        console.error(error);
+
+
+        showError(
+            "MFA verification request failed."
+        );
+
+
+    }
+
+
+    finally {
+
+
+        verifyButton.disabled =
+            false;
+
+    }
+
+}
+
+
+// ==========================================================
+// HANDLE AUTHENTICATED SESSION
+// ==========================================================
+
+function handleAuthenticatedSession(data) {
+
+
+    const session =
+        data.session ||
+        {};
+
+
+    currentSessionId =
+        session.session_id ||
+        null;
+
+
+    document
+        .getElementById(
+            "successBox"
+        )
+        .style.display =
+        "block";
+
+
+    document
+        .getElementById(
+            "sessionProtection"
+        )
+        .style.display =
+        "block";
+
+
+    document
+        .getElementById(
+            "sessionId"
+        )
+        .textContent =
+
+        currentSessionId
+
+        ?
+
+        "Session ID: " +
+        currentSessionId
+
+        :
+
+        "Authenticated session created.";
+
+}
+
+
+// ==========================================================
+// SIMULATE SESSION TAKEOVER
+// ==========================================================
+
+async function simulateSessionTakeover() {
+
+
+    if (!currentSessionId) {
+
+
+        alert(
+            "No authenticated session is available."
+        );
+
+
+        return;
+
+    }
+
+
+    const button =
+        document
+            .getElementById(
+                "takeoverButton"
+            );
+
+
+    button.disabled = true;
+
+
+    button.textContent =
+        "Analyzing Session...";
+
+
+    hideTakeoverResult();
+
+
+    try {
+
+
+        /*
+         * Simulated attacker context.
+         *
+         * The session ID remains the same.
+         *
+         * IP, device, browser and location
+         * are changed to simulate session takeover.
+         */
+
+        const payload = {
+
+            session_id:
+                currentSessionId,
+
+            current_ip:
+                "203.0.113.50",
+
+            current_device_id:
+                "ATTACKER-DEVICE",
+
+            current_user_agent:
+                "Attacker-Browser",
+
+            current_location:
+                "Unknown"
+
+        };
+
+
+        const response =
+            await fetch(
+                "/api/session/check",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(payload)
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Session Takeover Response:",
+            data
+        );
+
+
+        displayTakeoverResult(
+            data
+        );
+
+
+    }
+
+
+    catch(error) {
+
+
+        console.error(error);
+
+
+        alert(
+            "Session takeover check failed."
+        );
+
+    }
+
+
+    finally {
+
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            "⚠ SIMULATE SESSION TAKEOVER";
+
+    }
+
+}
+
+
+// ==========================================================
+// DISPLAY TAKEOVER RESULT
+// ==========================================================
+
+function displayTakeoverResult(data) {
+
+
+    const box =
+        document
+            .getElementById(
+                "takeoverResult"
+            );
+
+
+    const decision =
+        document
+            .getElementById(
+                "takeoverDecision"
+            );
+
+
+    const severity =
+        document
+            .getElementById(
+                "takeoverSeverity"
+            );
+
+
+    const risk =
+        document
+            .getElementById(
+                "takeoverRisk"
+            );
+
+
+    box.style.display =
+        "block";
+
+
+    decision.textContent =
+        "Decision: " +
+        (
+            data.decision ||
+            "UNKNOWN"
+        );
+
+
+    severity.textContent =
+        "Severity: " +
+        (
+            data.severity ||
+            "Unknown"
+        );
+
+
+    risk.textContent =
+        "Risk Score: " +
+        (
+            data.risk_score ??
+            0
+        ) +
+        "/100";
+
+
+    const anomaly =
+        data.anomaly_detection ||
+        {};
+
+
+    const changes =
+        anomaly.changes_detected ||
+        [];
+
+
+    document
+        .getElementById(
+            "ipDetection"
+        )
+        .textContent =
+        changes.some(
+            item =>
+                item
+                    .toLowerCase()
+                    .includes("ip")
+        )
+
+        ?
+
+        "✓ IP address change detected"
+
+        :
+
+        "✓ IP monitoring checked";
+
+
+    document
+        .getElementById(
+            "deviceDetection"
+        )
+        .textContent =
+        changes.some(
+            item =>
+                item
+                    .toLowerCase()
+                    .includes("device")
+        )
+
+        ?
+
+        "✓ Device change detected"
+
+        :
+
+        "✓ Device monitoring checked";
+
+
+    document
+        .getElementById(
+            "browserDetection"
+        )
+        .textContent =
+        changes.some(
+            item =>
+                item
+                    .toLowerCase()
+                    .includes("user")
+        )
+
+        ?
+
+        "✓ Browser/User-Agent change detected"
+
+        :
+
+        "✓ Browser monitoring checked";
+
+
+    document
+        .getElementById(
+            "locationDetection"
+        )
+        .textContent =
+        changes.some(
+            item =>
+                item
+                    .toLowerCase()
+                    .includes("location")
+        )
+
+        ?
+
+        "✓ Location change detected"
+
+        :
+
+        "✓ Location monitoring checked";
+
+
+    if (
+        data.revocation &&
+        data.revocation.revoked === true
+    ) {
+
+
+        document
+            .querySelector(
+                ".revoked"
+            )
+            .innerHTML =
+
+            "✓ Session automatically revoked" +
+            "<br>" +
+            "✓ Current request rejected" +
+            "<br>" +
+            "✓ Re-authentication required";
+
+    }
+
+
+}
+
+
+// ==========================================================
+// BACK TO LOGIN
+// ==========================================================
+
+function backToLogin() {
+
+
+    currentChallengeId =
+        null;
+
+
+    currentSessionId =
+        null;
+
+
+    hideMFA();
+
+    hideSuccess();
+
+    hideSessionProtection();
+
+    hideTakeoverResult();
+
+    clearResult();
+
+
+    document
+        .getElementById(
+            "otpInput"
+        )
+        .value = "";
+
+}
+
+
+// ==========================================================
+// HIDE MFA
+// ==========================================================
+
+function hideMFA() {
+
+
+    document
+        .getElementById(
+            "mfaBox"
+        )
+        .style.display =
+        "none";
+
+}
+
+
+// ==========================================================
+// HIDE SUCCESS
+// ==========================================================
+
+function hideSuccess() {
+
+
+    document
+        .getElementById(
+            "successBox"
+        )
+        .style.display =
+        "none";
+
+}
+
+
+// ==========================================================
+// HIDE SESSION PROTECTION
+// ==========================================================
+
+function hideSessionProtection() {
+
+
+    document
+        .getElementById(
+            "sessionProtection"
+        )
+        .style.display =
+        "none";
+
+}
+
+
+// ==========================================================
+// HIDE TAKEOVER RESULT
+// ==========================================================
+
+function hideTakeoverResult() {
+
+
+    document
+        .getElementById(
+            "takeoverResult"
+        )
+        .style.display =
+        "none";
+
+}
+
+
+// ==========================================================
+// CLEAR LOGIN RESULT
+// ==========================================================
+
+function clearResult() {
+
+
+    document
+        .getElementById(
+            "resultBox"
+        )
+        .style.display =
+        "none";
+
+}
+
+
+// ==========================================================
+// ERROR
+// ==========================================================
+
+function showError(message) {
+
+
+    const resultBox =
+        document
+            .getElementById(
+                "resultBox"
+            );
+
+
+    const title =
+        document
+            .getElementById(
+                "resultTitle"
+            );
+
+
+    resultBox.style.display =
+        "block";
+
+
+    title.textContent =
+        "⚠ " + message;
+
+
+    title.className =
+        "result-title danger";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

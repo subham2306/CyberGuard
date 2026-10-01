@@ -1,0 +1,31 @@
+{
+  "module": "digital_impersonation",
+  "service": "CyberGuard Digital Impersonation Detection API",
+  "port": 8002,
+  "tests": [
+    {
+      "name": "baseline_suspicious",
+      "prediction": "IMPERSONATION",
+      "risk_score": 37.84,
+      "risk_level": "LOW",
+      "attack_type": "CREDENTIAL_REQUEST",
+      "impersonation_probability": 0.513412
+    },
+    {
+      "name": "high_risk_impersonation",
+      "prediction": "IMPERSONATION",
+      "risk_score": 91.47,
+      "risk_level": "CRITICAL",
+      "attack_type": "CREDENTIAL_REQUEST",
+      "impersonation_probability": 0.85891
+    },
+    {
+      "name": "legitimate_baseline",
+      "prediction": "LEGITIMATE",
+      "risk_score": 20.66,
+      "risk_level": "LOW",
+      "attack_type": "AUTHORITY_ABUSE",
+      "impersonation_probability": 0.426505
+    }
+  ]
+}

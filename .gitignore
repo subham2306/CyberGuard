@@ -1,0 +1,66 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Test / cache
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Local backup copy
+03-YOU-ACCOUNT-TAKEOVER-FINAL-PASS/
+
+# Project-specific virtual environments
+01-PHISHING-PILU/**/venv/
+02-DIGITAL-IMPERSONATION-ABHIJIT/**/venv/
+03-YOU-ACCOUNT-TAKEOVER/**/venv/
+
+# Project-specific virtual environments
+01-PHISHING-PILU/**/venv/
+02-DIGITAL-IMPERSONATION-ABHIJIT/**/venv/
+03-YOU-ACCOUNT-TAKEOVER/**/venv/
+
+# Large datasetsn01-PHISHING-PILU/Final-CYBERGUARD-main/url/clean url_cleaned.csv
+01-PHISHING-PILU/Final-CYBERGUARD-main/social_chat_messages_clean.csv
+
+# Large URL dataset directory
+01-PHISHING-PILU/Final-CYBERGUARD-main/url/
