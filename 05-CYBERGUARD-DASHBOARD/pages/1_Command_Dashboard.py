@@ -1,462 +1,417 @@
-﻿import streamlit as st
-import pandas as pd
+import streamlit as st
+import requests
+from datetime import datetime
 
-# ============================================================
-# PAGE CONFIG
-# ============================================================
+from backend.login import login_form, logout, is_authenticated, current_user
 
 st.set_page_config(
-    page_title="CyberGuard Command Dashboard",
-    page_icon="ðŸ›¡ï¸",
+    page_title="CyberGuard Command Center",
+    page_icon="shield",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # ============================================================
-# CUSTOM CSS
+# ACCESS CONTROL
 # ============================================================
 
-st.markdown("""
-<style>
+if not is_authenticated():
+    login_form()
+    st.stop()
 
-    .main-title {
-        font-size: 36px;
-        font-weight: 800;
-        margin-bottom: 0;
+user = current_user()
+
+if user.get("role") != "ADMIN":
+    st.error("Access denied. The Command Center is restricted to administrators.")
+    st.stop()
+
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
+SERVICES = {
+    "Phishing Engine": "http://127.0.0.1:8001/health",
+    "Digital Impersonation": "http://127.0.0.1:8002/health",
+    "Account Takeover": "http://127.0.0.1:8000/health",
+    "CyberGuard Sentinel": "http://127.0.0.1:8010/health",
+}
+
+# ============================================================
+# STYLING
+# ============================================================
+
+st.markdown(
+    """
+    <style>
+
+    .block-container {
+        padding-top: 1.5rem;
+        padding-bottom: 3rem;
+        max-width: 1500px;
     }
 
-    .subtitle {
-        font-size: 16px;
-        opacity: 0.70;
-        margin-bottom: 25px;
+    .top-header {
+        padding: 24px 28px;
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.10);
+        background: linear-gradient(
+            135deg,
+            rgba(20,30,45,0.95),
+            rgba(10,15,25,0.98)
+        );
+        margin-bottom: 22px;
+    }
+
+    .top-title {
+        font-size: 34px;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -0.5px;
+    }
+
+    .top-subtitle {
+        margin-top: 6px;
+        font-size: 15px;
+        opacity: 0.68;
+    }
+
+    .admin-badge {
+        display: inline-block;
+        margin-top: 14px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: rgba(59,130,246,0.15);
+        border: 1px solid rgba(59,130,246,0.35);
+        color: #60a5fa;
+        font-size: 13px;
+        font-weight: 700;
     }
 
     .section-title {
-        font-size: 23px;
+        font-size: 22px;
         font-weight: 750;
-        margin-top: 10px;
-        margin-bottom: 15px;
+        margin-top: 25px;
+        margin-bottom: 14px;
     }
 
-    .status-card {
-        padding: 18px;
-        border-radius: 14px;
-        border: 1px solid rgba(128,128,128,0.25);
-        min-height: 105px;
-    }
-
-    .status-number {
-        font-size: 30px;
-        font-weight: 800;
-        margin-top: 5px;
-    }
-
-    .status-label {
-        font-size: 14px;
-        opacity: 0.70;
-    }
-
-    .attack-card {
-        padding: 18px;
-        border-radius: 14px;
-        border: 1px solid rgba(128,128,128,0.25);
+    .metric-card {
+        padding: 20px;
+        border-radius: 15px;
+        border: 1px solid rgba(255,255,255,0.09);
+        background: rgba(20,25,35,0.72);
         min-height: 125px;
     }
 
-    .attack-number {
-        font-size: 28px;
-        font-weight: 800;
+    .metric-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        opacity: 0.60;
     }
 
-    .attack-label {
+    .metric-value {
+        font-size: 32px;
+        font-weight: 800;
+        margin-top: 8px;
+    }
+
+    .metric-note {
+        font-size: 12px;
+        opacity: 0.55;
+        margin-top: 4px;
+    }
+
+    .module-card {
+        padding: 18px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(20,25,35,0.65);
+        min-height: 125px;
+    }
+
+    .module-name {
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .module-status {
+        margin-top: 10px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .online {
+        color: #4ade80;
+    }
+
+    .offline {
+        color: #f87171;
+    }
+
+    .event-card {
+        padding: 15px 18px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(20,25,35,0.55);
+        margin-bottom: 10px;
+    }
+
+    .event-title {
+        font-weight: 700;
         font-size: 14px;
-        opacity: 0.70;
     }
 
-    .recommendation {
-        padding: 12px 15px;
-        margin-bottom: 9px;
-        border-radius: 10px;
-        border: 1px solid rgba(128,128,128,0.20);
+    .event-meta {
+        font-size: 12px;
+        opacity: 0.58;
+        margin-top: 5px;
     }
 
-    .incident-open {
-        color: #ff4b4b;
-        font-weight: 800;
+    .footer-note {
+        text-align: center;
+        margin-top: 35px;
+        opacity: 0.45;
+        font-size: 12px;
     }
 
-    .incident-investigating {
-        color: #ff8c42;
-        font-weight: 800;
-    }
-
-    .incident-contained {
-        color: #4dabf7;
-        font-weight: 800;
-    }
-
-    .incident-resolved {
-        color: #51cf66;
-        font-weight: 800;
-    }
-
-</style>
-""", unsafe_allow_html=True)
-
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # ============================================================
 # SIDEBAR
 # ============================================================
 
 with st.sidebar:
-    st.markdown("## ðŸ›¡ï¸ CYBERGUARD")
-    st.caption("AI-Powered Cybersecurity Command Center")
+
+    st.markdown("## CYBERGUARD")
+    st.caption("Security Operations Center")
 
     st.divider()
 
-    st.markdown("### Navigation")
-    st.markdown("ðŸ  **Command Dashboard**")
-    st.markdown("ðŸ“§ Analyze Email")
-    st.markdown("ðŸŽ£ Phishing Detection")
-    st.markdown("ðŸ‘¤ Digital Impersonation")
-    st.markdown("ðŸ” Account Takeover")
-    st.markdown("ðŸŽ­ Deepfake Detection")
-    st.markdown("ðŸš¨ Incidents")
-    st.markdown("ðŸ“Š Reports")
-    st.markdown("âš™ï¸ Settings")
+    st.markdown("### Administrator")
+    st.write(f"**{user['username']}**")
+    st.caption("Role: ADMIN")
+
+    if st.button("Logout", use_container_width=True):
+        logout()
 
     st.divider()
 
-    st.markdown("### System Status")
+    st.markdown("### Command Center")
+    st.caption("Security monitoring and incident visibility")
 
-    st.success("Phishing Detection â€” Online")
-    st.success("Digital Impersonation Detection â€” Online")
-    st.success("Credential Theft & Account Takeover â€” Online")
-    st.warning("Sentinel â€” Check Required")
+    st.divider()
 
+    st.markdown("### System")
+    st.caption("Dashboard mode: ADMIN")
+    st.caption("Data mode: Demo + API integration")
 
 # ============================================================
 # HEADER
 # ============================================================
 
 st.markdown(
-    '<div class="main-title">ðŸ›¡ï¸ CyberGuard Command Dashboard</div>',
-    unsafe_allow_html=True
+    """
+    <div class="top-header">
+        <div class="top-title">CyberGuard Command Center</div>
+        <div class="top-subtitle">
+            Unified cybersecurity monitoring, threat detection and incident response
+        </div>
+        <div class="admin-badge">ADMIN ACCESS</div>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
-st.markdown(
-    '<div class="subtitle">'
-    'Unified cybersecurity monitoring, threat detection and incident response'
-    '</div>',
-    unsafe_allow_html=True
-)
-
-
 # ============================================================
-# TOP STATUS
+# OVERVIEW
 # ============================================================
 
-st.info(
-    "ðŸ”Ž Command Center â€” Monitoring phishing, digital impersonation, "
-    "account takeover, deepfake and related security events."
-)
+st.markdown('<div class="section-title">Security Overview</div>', unsafe_allow_html=True)
 
+m1, m2, m3, m4 = st.columns(4)
+
+with m1:
+    st.markdown(
+        """
+        <div class="metric-card">
+            <div class="metric-label">Total Events</div>
+            <div class="metric-value">1,248</div>
+            <div class="metric-note">Analyzed security events</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with m2:
+    st.markdown(
+        """
+        <div class="metric-card">
+            <div class="metric-label">Threats Detected</div>
+            <div class="metric-value">327</div>
+            <div class="metric-note">Detected by security engines</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with m3:
+    st.markdown(
+        """
+        <div class="metric-card">
+            <div class="metric-label">Critical Threats</div>
+            <div class="metric-value">42</div>
+            <div class="metric-note">High-priority security events</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with m4:
+    st.markdown(
+        """
+        <div class="metric-card">
+            <div class="metric-label">Active Incidents</div>
+            <div class="metric-value">86</div>
+            <div class="metric-note">Requires investigation</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # ============================================================
-# KPI CARDS
-# ============================================================
-
-st.markdown(
-    '<div class="section-title">Security Overview</div>',
-    unsafe_allow_html=True
-)
-
-k1, k2, k3, k4 = st.columns(4)
-
-with k1:
-    st.markdown("""
-    <div class="status-card">
-        <div class="status-label">TOTAL EVENTS ANALYSED</div>
-        <div class="status-number">1,248</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with k2:
-    st.markdown("""
-    <div class="status-card">
-        <div class="status-label">THREATS DETECTED</div>
-        <div class="status-number">327</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with k3:
-    st.markdown("""
-    <div class="status-card">
-        <div class="status-label">CRITICAL THREATS</div>
-        <div class="status-number">42</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with k4:
-    st.markdown("""
-    <div class="status-card">
-        <div class="status-label">ACTIVE INCIDENTS</div>
-        <div class="status-number">86</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-st.divider()
-
-
-# ============================================================
-# THREAT CATEGORY + RISK LEVEL
+# CHARTS
 # ============================================================
 
 left, right = st.columns(2)
 
 with left:
+    st.markdown('<div class="section-title">Threat Category</div>', unsafe_allow_html=True)
 
-    st.markdown(
-        '<div class="section-title">Threat Category</div>',
-        unsafe_allow_html=True
-    )
+    threat_data = {
+        "Phishing": 65,
+        "Digital Impersonation": 42,
+        "Account Takeover": 88,
+        "Deepfake": 37,
+        "Other": 120,
+    }
 
-    threat_data = pd.DataFrame({
-        "Threat Category": [
-            "Phishing",
-            "Impersonation",
-            "Account Takeover",
-            "Credential Theft",
-            "Deepfake",
-        ],
-        "Threats": [
-            120,
-            87,
-            65,
-            38,
-            17,
-        ],
-    })
-
-    st.bar_chart(
-        threat_data.set_index("Threat Category"),
-        height=300
-    )
-
+    st.bar_chart(threat_data, height=300)
 
 with right:
+    st.markdown('<div class="section-title">Risk Distribution</div>', unsafe_allow_html=True)
 
-    st.markdown(
-        '<div class="section-title">Risk Level</div>',
-        unsafe_allow_html=True
-    )
+    risk_data = {
+        "Low": 128,
+        "Medium": 61,
+        "High": 99,
+        "Critical": 42,
+    }
 
-    risk_data = pd.DataFrame({
-        "Risk Level": [
-            "Critical",
-            "High",
-            "Medium",
-            "Low",
-        ],
-        "Events": [
-            42,
-            126,
-            98,
-            61,
-        ],
-    })
-
-    st.bar_chart(
-        risk_data.set_index("Risk Level"),
-        height=300
-    )
-
-
-st.divider()
-
+    st.bar_chart(risk_data, height=300)
 
 # ============================================================
-# ATTACK STATISTICS
+# MODULE HEALTH
 # ============================================================
 
-st.markdown(
-    '<div class="section-title">Attack Statistics</div>',
-    unsafe_allow_html=True
-)
+st.markdown('<div class="section-title">Security Module Health</div>', unsafe_allow_html=True)
 
-a1, a2, a3, a4 = st.columns(4)
+health_cols = st.columns(4)
 
-with a1:
-    st.markdown("""
-    <div class="attack-card">
-        <div>ðŸŽ£</div>
-        <div class="attack-number">120</div>
-        <div class="attack-label">PHISHING ATTEMPTS</div>
-    </div>
-    """, unsafe_allow_html=True)
+for column, (name, url) in zip(health_cols, SERVICES.items()):
 
-with a2:
-    st.markdown("""
-    <div class="attack-card">
-        <div>ðŸ‘¤</div>
-        <div class="attack-number">87</div>
-        <div class="attack-label">IMPERSONATION ATTEMPTS</div>
-    </div>
-    """, unsafe_allow_html=True)
+    status = "OFFLINE"
+    css_class = "offline"
 
-with a3:
-    st.markdown("""
-    <div class="attack-card">
-        <div>ðŸŽ­</div>
-        <div class="attack-number">17</div>
-        <div class="attack-label">SUSPECTED DEEPFAKES</div>
-    </div>
-    """, unsafe_allow_html=True)
+    try:
+        response = requests.get(url, timeout=2)
 
-with a4:
-    st.markdown("""
-    <div class="attack-card">
-        <div>ðŸ”</div>
-        <div class="attack-number">65</div>
-        <div class="attack-label">ACCOUNT TAKEOVER ATTEMPTS</div>
-    </div>
-    """, unsafe_allow_html=True)
+        if response.ok:
+            status = "ONLINE"
+            css_class = "online"
 
+    except requests.RequestException:
+        status = "OFFLINE"
 
-st.divider()
-
-
-# ============================================================
-# ATTACK TIMELINE
-# ============================================================
-
-st.markdown(
-    '<div class="section-title">Attack Timeline</div>',
-    unsafe_allow_html=True
-)
-
-timeline = pd.DataFrame({
-    "Phishing": [8, 13, 19, 32, 21, 17, 10],
-    "Impersonation": [4, 6, 10, 18, 13, 11, 7],
-    "Account Takeover": [3, 4, 7, 12, 8, 10, 5],
-    "Deepfake": [1, 2, 3, 5, 4, 2, 2],
-}, index=[
-    "00:00",
-    "04:00",
-    "08:00",
-    "12:00",
-    "16:00",
-    "20:00",
-    "24:00",
-])
-
-st.line_chart(timeline, height=350)
-
-
-st.divider()
-
-
-# ============================================================
-# TARGETED USERS + RECOMMENDATIONS
-# ============================================================
-
-left, right = st.columns(2)
-
-with left:
-
-    st.markdown(
-        '<div class="section-title">Frequently Targeted Users / Services</div>',
-        unsafe_allow_html=True
-    )
-
-    targets = pd.DataFrame({
-        "Target": [
-            "Finance Department",
-            "Administrator",
-            "HR Department",
-            "IT Department",
-            "Payroll Service",
-        ],
-        "Incidents": [
-            42,
-            31,
-            27,
-            19,
-            16,
-        ],
-        "Risk": [
-            "HIGH",
-            "HIGH",
-            "HIGH",
-            "MEDIUM",
-            "HIGH",
-        ],
-    })
-
-    st.dataframe(
-        targets,
-        use_container_width=True,
-        hide_index=True
-    )
-
-
-with right:
-
-    st.markdown(
-        '<div class="section-title">Recommended Actions</div>',
-        unsafe_allow_html=True
-    )
-
-    recommendations = [
-        "ðŸ”´ Block suspicious sender",
-        "ðŸŸ  Verify sender identity",
-        "ðŸŸ¡ Reset affected credentials",
-        "ðŸŸ¡ Enable MFA for affected account",
-        "ðŸ”µ Investigate related authentication events",
-    ]
-
-    for recommendation in recommendations:
+    with column:
         st.markdown(
-            f'<div class="recommendation">{recommendation}</div>',
-            unsafe_allow_html=True
+            f"""
+            <div class="module-card">
+                <div class="module-name">{name}</div>
+                <div class="module-status {css_class}">
+                    {status}
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
 
-
-st.divider()
-
-
 # ============================================================
-# INCIDENT STATUS
+# RECENT EVENTS
 # ============================================================
 
-st.markdown(
-    '<div class="section-title">Incident Status</div>',
-    unsafe_allow_html=True
-)
+st.markdown('<div class="section-title">Recent Security Events</div>', unsafe_allow_html=True)
 
-i1, i2, i3, i4 = st.columns(4)
+events = [
+    ("Account Takeover", "Critical", "BLOCK", "Suspicious session detected"),
+    ("Phishing Detection", "Critical", "BLOCK", "Malicious URL detected"),
+    ("Digital Impersonation", "Critical", "BLOCK", "Credential request detected"),
+    ("Account Takeover", "High", "MFA_REQUIRED", "Password spraying pattern"),
+]
 
-with i1:
-    st.metric("ðŸ”´ OPEN", "38")
+for module, severity, decision, description in events:
 
-with i2:
-    st.metric("ðŸŸ  INVESTIGATING", "27")
+    st.markdown(
+        f"""
+        <div class="event-card">
+            <div class="event-title">
+                {module} - {severity} - {decision}
+            </div>
+            <div class="event-meta">
+                {description}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-with i3:
-    st.metric("ðŸ”µ CONTAINED", "14")
+# ============================================================
+# BLOCKED IPS
+# ============================================================
 
-with i4:
-    st.metric("ðŸŸ¢ RESOLVED", "7")
+st.markdown('<div class="section-title">Blocked IP Addresses</div>', unsafe_allow_html=True)
 
+try:
+    response = requests.get(
+        "http://127.0.0.1:8000/blocked-ips",
+        timeout=2,
+    )
+
+    if response.ok:
+        blocked = response.json()
+
+        if blocked:
+            st.dataframe(blocked, use_container_width=True)
+        else:
+            st.info("No currently blocked IP addresses.")
+
+    else:
+        st.info("ATO blocklist is currently unavailable.")
+
+except requests.RequestException:
+    st.info("ATO blocklist is currently unavailable.")
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-st.divider()
-
-st.caption(
-    "CyberGuard AI â€¢ BPUT Hackathon 2026 â€¢ "
-    "Phishing Detection + Digital Impersonation Detection + Credential Theft & Account Takeover + CyberGuard Sentinel"
+st.markdown(
+    """
+    <div class="footer-note">
+        CyberGuard AI Command Center | Administrator Security View
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
